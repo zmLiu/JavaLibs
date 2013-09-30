@@ -4,9 +4,8 @@ import org.apache.log4j.Logger;
 
 public class LogError {
 	
-	@SuppressWarnings("rawtypes")
-	public static void error(Class clazz,Exception e){
-		Logger logger = Logger.getLogger(clazz);
+	public static void error(Exception e){
+		Logger logger = Logger.getRootLogger();
 		logger.error(e.getMessage());
 		StackTraceElement[] error = e.getStackTrace();
 	    for (StackTraceElement stackTraceElement : error) {  
