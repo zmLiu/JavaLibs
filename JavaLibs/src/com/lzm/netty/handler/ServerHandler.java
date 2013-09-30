@@ -30,15 +30,27 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	public static void registerCommand(int cmd,ICommand command){
 		commands.put(cmd, command);
 	}
+	//获取命令
+	public static ICommand getCommand(int cmd){
+		return commands.get(cmd);
+	}
 	
 	//设置连接关闭的回掉
 	public static void registerConnectCommand(ICommand connectCommand){
 		ServerHandler.connectCommand= connectCommand;
 	}
+	//获取用户连接命令
+	public static ICommand getConnectCommand(){
+		return connectCommand;
+	}
 	
 	//设置连接关闭的回掉
 	public static void registerConnectCloseCommand(ICommand connectCloseCommand){
 		ServerHandler.connectCloseCommand = connectCloseCommand;
+	}
+	//获取连接关闭的命令
+	public static ICommand getConnectCloseCommand(){
+		return connectCloseCommand;
 	}
 		
 	//发送字符串数组
