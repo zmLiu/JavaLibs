@@ -23,10 +23,10 @@ public class MemcacheHelper {
 	}
 	
 	/**
-	 * 存放
+	 * 瀛樻斁
 	 * @param key
 	 * @param value
-	 * @param time 过期时间
+	 * @param time 杩囨湡鏃堕棿
 	 * */
 	public void set(String key, String value, int time){
 		try {
@@ -40,7 +40,7 @@ public class MemcacheHelper {
 	}
 	
 	/**
-	 * 获取
+	 * 鑾峰彇
 	 * */
 	public String get(String key){
 		String reStr = null;
@@ -59,7 +59,7 @@ public class MemcacheHelper {
 	}
 	
 	/**
-	 * 缓存json对象
+	 * 缂撳瓨json瀵硅薄
 	 * */
 	public void setJson(String key, JSONObject value, int time){
 		String jsonStr = value.toJSONString();
@@ -68,7 +68,7 @@ public class MemcacheHelper {
 	
 	
 	/**
-	 * 获取一个json对象
+	 * 鑾峰彇涓�涓猨son瀵硅薄
 	 * */
 	public JSONObject getJson(String key){
 		String jsonStr = get(key);
@@ -80,7 +80,7 @@ public class MemcacheHelper {
 	}
 	
 	/**
-	 * 删除
+	 * 鍒犻櫎
 	 * */
 	public void delete(String key){
 		try {

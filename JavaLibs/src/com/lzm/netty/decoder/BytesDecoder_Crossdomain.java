@@ -7,29 +7,29 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 /**
- * <p>---´¦ÀíÕ³°ü---</p>
- * <p>µÚÒ»´ÎÊÕµ½ÏûÏ¢ ·µ»Ø²ßÂÔÎÄ¼ş</p>
+ * <p>---å¤„ç†ç²˜åŒ…---</p>
+ * <p>ç¬¬ä¸€æ¬¡æ”¶åˆ°æ¶ˆæ¯ è¿”å›ç­–ç•¥æ–‡ä»¶</p>
  * */
 public class BytesDecoder_Crossdomain extends ByteToMessageDecoder {
 	/**
-	 * µ±Ç°ĞèÒª¶ÁÈ¡Êı¾İµÄ³¤¶È
+	 * å½“å‰éœ€è¦è¯»å–æ•°æ®çš„é•¿åº¦
 	 * */
 	private int readLength = 4;
 	
 	/**
-	 * ÊÇ·ñ¶ÁÈ¡ÏûÏ¢Ìå³¤¶È
+	 * æ˜¯å¦è¯»å–æ¶ˆæ¯ä½“é•¿åº¦
 	 * */
 	private boolean readStringLength = true;
 	
 	/**
-	 * ÊÇ·ñÎªµÚÒ»´Î½ÓÊÜµ½ÏûÏ¢
+	 * æ˜¯å¦ä¸ºç¬¬ä¸€æ¬¡æ¥å—åˆ°æ¶ˆæ¯
 	 * */
 	private boolean firstMessage = true;
 	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,List<Object> out) throws Exception {
 		
-		if(firstMessage){//flash Á¬½ÓsocketĞèÒªÇëÇó²ßÂÔÎÄ¼ş
+		if(firstMessage){//flash è¿æ¥socketéœ€è¦è¯·æ±‚ç­–ç•¥æ–‡ä»¶
 			byte bytes[] = new byte[in.readableBytes()];
 			in.readBytes(bytes);
 			String str = new String(bytes);
@@ -49,17 +49,17 @@ public class BytesDecoder_Crossdomain extends ByteToMessageDecoder {
 			}else{
 				ctx.close();
 			}
-		}else if(in.readableBytes() >= readLength){//ĞèÒªÓĞ×ã¹»µÄ¿É¶Á×Ö½Ú
-			//¶ÁÈ¡ÏûÏ¢Ìå³¤¶È
+		}else if(in.readableBytes() >= readLength){//éœ€è¦æœ‰è¶³å¤Ÿçš„å¯è¯»å­—èŠ‚
+			//è¯»å–æ¶ˆæ¯ä½“é•¿åº¦
 			if(readStringLength) readLength = in.readInt();
 			
-			//¶ÁÈ¡ÏûÏ¢Ìå
+			//è¯»å–æ¶ˆæ¯ä½“
 			if(in.readableBytes() >= readLength){
 				out.add(in.readBytes(readLength));
 				readLength = 4;
 				readStringLength = true;
 			}else{
-				//ÏûÏ¢Ìå²»È«£¬ÏÂÒ»´Î¼ÌĞø¶ÁÈ¡ÏûÏ¢Ìå
+				//æ¶ˆæ¯ä½“ä¸å…¨ï¼Œä¸‹ä¸€æ¬¡ç»§ç»­è¯»å–æ¶ˆæ¯ä½“
 				readStringLength = false;
 			}
 		}

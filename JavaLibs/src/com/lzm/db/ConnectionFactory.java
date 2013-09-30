@@ -18,29 +18,29 @@ public class ConnectionFactory implements PoolableObjectFactory<Connection> {
 
 	@Override
 	public void activateObject(Connection conn) throws Exception {
-		//¼¤»î¶ÔÏó(½øÈë·Ç¿ÕÏĞ×´Ì¬)
+		//æ¿€æ´»å¯¹è±¡(è¿›å…¥éç©ºé—²çŠ¶æ€)
 	}
 
 	@Override
 	public void destroyObject(Connection conn) throws Exception {
-		//Ïú»Ù¶ÔÏó
+		//é”€æ¯å¯¹è±¡
 		conn.close();
 	}
 
 	@Override
 	public Connection makeObject() throws Exception {
-		//ĞÂ½¨¶ÔÏó
+		//æ–°å»ºå¯¹è±¡
 		return connTool.makeConnection();
 	}
 
 	@Override
 	public void passivateObject(Connection conn) throws Exception {
-		//¹ÒÆğ¶ÔÏó(½øÈë¿ÕÏĞ×´Ì¬)
+		//æŒ‚èµ·å¯¹è±¡(è¿›å…¥ç©ºé—²çŠ¶æ€)
 	}
 
 	@Override
 	public boolean validateObject(Connection conn) {
-		//¼á³Ö¶ÔÏóÊÇ·ñ¿ÉÓÃ
+		//åšæŒå¯¹è±¡æ˜¯å¦å¯ç”¨
 		try {
 			return !conn.isClosed();
 		} catch (SQLException e) {

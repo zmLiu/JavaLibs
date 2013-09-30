@@ -2,40 +2,40 @@ package com.lzm.db.config;
 
 public class DBConfig {
 	/**
-	 * Êı¾İ¿âÇı¶¯
+	 * æ•°æ®åº“é©±åŠ¨
 	 * <p>
-	 * Ä¬ÈÏ:com.mysql.jdbc.Driver
+	 * é»˜è®¤:com.mysql.jdbc.Driver
 	 * <p>
 	 * */
 	public String dirverClassName = "com.mysql.jdbc.Driver";
 	
 	/**
-	 * Êı¾İ¿âurl
+	 * æ•°æ®åº“url
 	 * */
 	public String url;//mysql "jdbc:mysql://127.0.0.1:3306/test"
 	
 	/**
-	 * Êı¾İ¿âÓÃ»§
+	 * æ•°æ®åº“ç”¨æˆ·
 	 * */
 	public String user;
 	
 	/**
-	 * Êı¾İ¿âÃÜÂë
+	 * æ•°æ®åº“å¯†ç 
 	 * */
 	public String password;
 	
 	/**
-	 * Êı¾İ¿âÊÇ·ñÆôÓÃUnicode
+	 * æ•°æ®åº“æ˜¯å¦å¯ç”¨Unicode
 	 * <p>
-	 * Ä¬ÈÏ:true
+	 * é»˜è®¤:true
 	 * <p>
 	 * */
 	public String useUnicode = "true";
 	
 	/**
-	 * Êı¾İ¿â±àÂë
+	 * æ•°æ®åº“ç¼–ç 
 	 * <p>
-	 * Ä¬ÈÏ:utf8
+	 * é»˜è®¤:utf8
 	 * <p>
 	 * */
 	public String characterEncoding = "utf8";

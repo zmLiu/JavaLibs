@@ -16,16 +16,16 @@ import com.lzm.netty.handler.IdleHandler;
 import com.lzm.netty.handler.ServerHandler;
 
 public class NettySocketServer {
-	//·şÎñÆ÷¼àÌı¶Ë¿Ú
+	//æœåŠ¡å™¨ç›‘å¬ç«¯å£
 	public int port;
-	//ÊÇ·ñ·µ»Ø²ßÂÔÎÄ¼ş(ÔÚwebÖĞÔËĞĞĞèÒª)
+	//æ˜¯å¦è¿”å›ç­–ç•¥æ–‡ä»¶(åœ¨webä¸­è¿è¡Œéœ€è¦)
 	public boolean needCrossdomain = true;
-	//Á¬½Ó¿ÕÏĞÊ±¼ä
+	//è¿æ¥ç©ºé—²æ—¶é—´
 	public int idleTimeSeconds = 60;
 	
 	/**
-	 * ´´½¨·şÎñÆ÷
-	 * @param	port	¼àÌı¶Ë¿Ú
+	 * åˆ›å»ºæœåŠ¡å™¨
+	 * @param	port	ç›‘å¬ç«¯å£
 	 * */
 	public NettySocketServer(int port) {
 		this.port = port;

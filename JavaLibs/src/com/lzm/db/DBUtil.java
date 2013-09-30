@@ -44,7 +44,7 @@ public class DBUtil {
 	private DBUtil(GenericObjectPool<Connection> connPool) {
 		this.connPool = connPool;
 	}
-	//²é
+	//æŸ¥
 	@SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
 	public List<Object> queryClass(String sql, Object[] params, Class clazz)throws Exception {
 		Connection conn = connPool.borrowObject();
@@ -55,7 +55,7 @@ public class DBUtil {
 			connPool.returnObject(conn);
 		}
 	}
-	//²é
+	//æŸ¥
 	@SuppressWarnings("deprecation")
 	public List<Object[]> queryList(String sql, Object[] params)throws Exception {
 		Connection conn = connPool.borrowObject();
@@ -66,7 +66,7 @@ public class DBUtil {
 			connPool.returnObject(conn);
 		}
 	}
-	//²é
+	//æŸ¥
 	@SuppressWarnings("deprecation")
 	public List<Map<String, Object>> queryListMap(String sql, Object[] params)throws Exception {
 		Connection conn = connPool.borrowObject();
@@ -77,7 +77,7 @@ public class DBUtil {
 			connPool.returnObject(conn);
 		}
 	}
-	//ÔöÉ¾¸Ä
+	//å¢åˆ æ”¹
 	public int update(String sql) throws Exception {
 		Connection conn = connPool.borrowObject();
 		try{
@@ -87,7 +87,7 @@ public class DBUtil {
 			connPool.returnObject(conn);
 		}
 	}
-	//ÔöÉ¾¸Ä
+	//å¢åˆ æ”¹
 	public int update(String sql, Object[] params) throws Exception {
 		Connection conn = connPool.borrowObject();
 		try{
@@ -97,7 +97,7 @@ public class DBUtil {
 			connPool.returnObject(conn);
 		}
 	}
-	//²åÈëÊı¾İ²¢ÇÒ·µ»Ø×ÔÔöid
+	//æ’å…¥æ•°æ®å¹¶ä¸”è¿”å›è‡ªå¢id
 	public long insert_returnInsertId(String sql) throws Exception {
 		Connection conn = connPool.borrowObject();
 		try{
@@ -109,7 +109,7 @@ public class DBUtil {
 			connPool.returnObject(conn);
 		}
 	}
-	//²åÈëÊı¾İ²¢ÇÒ·µ»Ø×ÔÔöid
+	//æ’å…¥æ•°æ®å¹¶ä¸”è¿”å›è‡ªå¢id
 	public long insert_returnInsertId(String sql, Object[] params) throws Exception {
 		Connection conn = connPool.borrowObject();
 		try{

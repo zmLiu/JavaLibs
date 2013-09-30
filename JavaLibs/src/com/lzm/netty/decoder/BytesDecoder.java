@@ -7,34 +7,34 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 /**
- * ---´¦ÀíÕ³°ü---
+ * ---å¤„ç†ç²˜åŒ…---
  * */
 public class BytesDecoder extends ByteToMessageDecoder {
 	
 	/**
-	 * µ±Ç°ĞèÒª¶ÁÈ¡Êı¾İµÄ³¤¶È
+	 * å½“å‰éœ€è¦è¯»å–æ•°æ®çš„é•¿åº¦
 	 * */
 	private int readLength = 4;
 	
 	/**
-	 * ÊÇ·ñ¶ÁÈ¡ÏûÏ¢Ìå³¤¶È
+	 * æ˜¯å¦è¯»å–æ¶ˆæ¯ä½“é•¿åº¦
 	 * */
 	private boolean readStringLength = true;
 	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,List<Object> out) throws Exception {
-		//ÏûÏ¢Ìå²»¹»³¤ Ö±½Ó·µ»Ø
+		//æ¶ˆæ¯ä½“ä¸å¤Ÿé•¿ ç›´æ¥è¿”å›
 		if(in.readableBytes() < readLength) return;
-		//¶ÁÈ¡ÏûÏ¢Ìå³¤¶È
+		//è¯»å–æ¶ˆæ¯ä½“é•¿åº¦
 		if(readStringLength) readLength = in.readInt();
 		
-		//¶ÁÈ¡ÏûÏ¢Ìå
+		//è¯»å–æ¶ˆæ¯ä½“
 		if(in.readableBytes() >= readLength){
 			out.add(in.readBytes(readLength));
 			readLength = 4;
 			readStringLength = true;
 		}else{
-			//ÏûÏ¢Ìå²»È«£¬ÏÂÒ»´Î¼ÌĞø¶ÁÈ¡ÏûÏ¢Ìå
+			//æ¶ˆæ¯ä½“ä¸å…¨ï¼Œä¸‹ä¸€æ¬¡ç»§ç»­è¯»å–æ¶ˆæ¯ä½“
 			readStringLength = false;
 		}
 		

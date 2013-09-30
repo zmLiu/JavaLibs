@@ -4,12 +4,12 @@ import io.netty.channel.ChannelHandlerContext;
 
 public interface ICommand {
 	/**
-	 * »ñÈ¡ÃüÁîºÅ
+	 * è·å–å‘½ä»¤å·
 	 * */
 	int getCmd();
 	
 	/**
-	 * ½ÓÊÜµ½ÏûÏ¢
+	 * æ¥å—åˆ°æ¶ˆæ¯
 	 * */
 	void execute(ChannelHandlerContext ctx,String []msgs) throws Exception;
 }

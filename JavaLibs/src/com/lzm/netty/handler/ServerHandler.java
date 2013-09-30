@@ -13,50 +13,50 @@ import com.lzm.netty.command.ICommand;
 import com.lzm.netty.utils.Packet;
 
 /**
- * Âß¼­´¦Àí·Ö·¢
+ * é€»è¾‘å¤„ç†åˆ†å‘
  * */
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 	
-	//ËùÓĞÃüÁî
+	//æ‰€æœ‰å‘½ä»¤
 	private static HashMap<Integer, ICommand> commands = new HashMap<Integer, ICommand>();
 	
-	//ĞÂÓÃ»§Á¬½ÓµÄ»Øµô
+	//æ–°ç”¨æˆ·è¿æ¥çš„å›æ‰
 	private static ICommand connectCommand;
 
-	//Á¬½Ó¹Ø±ÕµÄ»Øµô
+	//è¿æ¥å…³é—­çš„å›æ‰
 	private static ICommand connectCloseCommand;
 	
-	//×¢²áÃüÁî
+	//æ³¨å†Œå‘½ä»¤
 	public static void registerCommand(int cmd,ICommand command){
 		commands.put(cmd, command);
 	}
-	//»ñÈ¡ÃüÁî
+	//è·å–å‘½ä»¤
 	public static ICommand getCommand(int cmd){
 		return commands.get(cmd);
 	}
 	
-	//ÉèÖÃÁ¬½Ó¹Ø±ÕµÄ»Øµô
+	//è®¾ç½®è¿æ¥å…³é—­çš„å›æ‰
 	public static void registerConnectCommand(ICommand connectCommand){
 		ServerHandler.connectCommand= connectCommand;
 	}
-	//»ñÈ¡ÓÃ»§Á¬½ÓÃüÁî
+	//è·å–ç”¨æˆ·è¿æ¥å‘½ä»¤
 	public static ICommand getConnectCommand(){
 		return connectCommand;
 	}
 	
-	//ÉèÖÃÁ¬½Ó¹Ø±ÕµÄ»Øµô
+	//è®¾ç½®è¿æ¥å…³é—­çš„å›æ‰
 	public static void registerConnectCloseCommand(ICommand connectCloseCommand){
 		ServerHandler.connectCloseCommand = connectCloseCommand;
 	}
-	//»ñÈ¡Á¬½Ó¹Ø±ÕµÄÃüÁî
+	//è·å–è¿æ¥å…³é—­çš„å‘½ä»¤
 	public static ICommand getConnectCloseCommand(){
 		return connectCloseCommand;
 	}
 		
-	//·¢ËÍ×Ö·û´®Êı×é
+	//å‘é€å­—ç¬¦ä¸²æ•°ç»„
 	public static void sendMessages(ChannelHandlerContext ctx,int cmd,String []msgs) throws UnsupportedEncodingException{
 		
-		int dataLen = 12;//ÏûÏ¢³¤¶È(4×Ö½Ú) cmd(4×Ö½Ú) Êı×é³¤¶È(4×Ö½Ú)
+		int dataLen = 12;//æ¶ˆæ¯é•¿åº¦(4å­—èŠ‚) cmd(4å­—èŠ‚) æ•°ç»„é•¿åº¦(4å­—èŠ‚)
 		
 		ArrayList<byte[]> bytesList = new ArrayList<byte[]>();
 		
@@ -66,13 +66,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			bytes = msgs[i].getBytes("utf-8");
 			bytesList.add(bytes);
 			
-			//×Ö½ÚÊı×é³¤¶È±êÊ¶ + ×Ö½ÚÊı×é±¾Éí³¤¶È
+			//å­—èŠ‚æ•°ç»„é•¿åº¦æ ‡è¯† + å­—èŠ‚æ•°ç»„æœ¬èº«é•¿åº¦
 			dataLen += (4 + bytes.length);
 		}
 		
 		ByteBuf buf = ctx.alloc().buffer(dataLen);
 		
-		buf.writeInt(dataLen-4);//ÏûÏ¢Ìå³¤¶È(ĞèÒª¼õÈ¥±íÊ¾Õ¼ÓÃÖµ)
+		buf.writeInt(dataLen-4);//æ¶ˆæ¯ä½“é•¿åº¦(éœ€è¦å‡å»è¡¨ç¤ºå ç”¨å€¼)
 		buf.writeInt(cmd);
 		buf.writeInt(length);
 		
