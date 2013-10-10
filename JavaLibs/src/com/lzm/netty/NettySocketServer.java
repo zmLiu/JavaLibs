@@ -12,6 +12,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 
 import com.lzm.netty.decoder.BytesDecoder;
 import com.lzm.netty.decoder.BytesDecoder_Crossdomain;
+import com.lzm.netty.handler.CommandExecuteThread;
 import com.lzm.netty.handler.IdleHandler;
 import com.lzm.netty.handler.ServerHandler;
 
@@ -23,6 +24,9 @@ public class NettySocketServer {
 	//连接空闲时间
 	public int idleTimeSeconds = 60;
 	
+	//执行命令的线程数
+	public int executeCommandThreadCount = 1;
+	
 	/**
 	 * 创建服务器
 	 * @param	port	监听端口
@@ -32,6 +36,8 @@ public class NettySocketServer {
 	}
 	
 	public void run() throws Exception {
+		CommandExecuteThread.initExecuteCommandThread(executeCommandThreadCount);
+		
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {

@@ -52,7 +52,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	public static ICommand getConnectCloseCommand(){
 		return connectCloseCommand;
 	}
-		
+	
 	//发送字符串数组
 	public static void sendMessages(ChannelHandlerContext ctx,int cmd,String []msgs) throws UnsupportedEncodingException{
 		
@@ -104,7 +104,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	    			msgs[i] = packet.readString("utf-8");
 	    		}
 	    		
-	    		command.execute(ctx, msgs);
+	    		executeCmd(command,ctx, msgs);
 	    	}
 		}finally{
 			ReferenceCountUtil.release(msg);
@@ -113,12 +113,16 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	
 	@Override
 	public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-		if(connectCommand != null) connectCommand.execute(ctx, null);
+		if(connectCommand != null) executeCmd(connectCommand,ctx, null);
 	}
 	
 	@Override
 	public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-		if(connectCloseCommand != null) connectCloseCommand.execute(ctx, null);
+		if(connectCloseCommand != null) executeCmd(connectCloseCommand,ctx, null);
+	}
+	
+	public void executeCmd(ICommand command,ChannelHandlerContext ctx,String []msgs) throws Exception{
+		CommandExecuteThread.addTask(command, ctx, msgs);
 	}
 	
 	
