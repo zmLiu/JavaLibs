@@ -56,7 +56,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	//发送字符串数组
 	public static void sendMessages(ChannelHandlerContext ctx,int cmd,String []msgs) throws UnsupportedEncodingException{
 		
-		int dataLen = 12;//消息长度(4字节) cmd(4字节) 数组长度(4字节)
+		int dataLen = 6;//消息长度(2字节) cmd(2字节) 数组长度(2字节)
 		
 		ArrayList<byte[]> bytesList = new ArrayList<byte[]>();
 		
@@ -67,18 +67,18 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			bytesList.add(bytes);
 			
 			//字节数组长度标识 + 字节数组本身长度
-			dataLen += (4 + bytes.length);
+			dataLen += (2 + bytes.length);
 		}
 		
 		ByteBuf buf = ctx.alloc().buffer(dataLen);
 		
-		buf.writeInt(dataLen-4);//消息体长度(需要减去表示占用值)
-		buf.writeInt(cmd);
-		buf.writeInt(length);
+		buf.writeShort(dataLen-2);//消息体长度(需要减去表示占用值)
+		buf.writeShort(cmd);
+		buf.writeShort(length);
 		
 		for (int i = 0; i < length; i++) {
 			bytes = bytesList.get(i);
-			buf.writeInt(bytes.length);
+			buf.writeShort(bytes.length);
 			buf.writeBytes(bytes);
 		}
 		ctx.write(buf);
@@ -91,13 +91,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		try {
 			ByteBuf in = (ByteBuf) msg;
 			
-	    	int cmd = in.readInt();
+	    	int cmd = in.readShort();
 	    	ICommand command = commands.get(cmd);
 	    	
 	    	if(command != null) {
 	    		Packet packet = new Packet(in);
 	    		
-	    		int msgLen = packet.readInt();
+	    		int msgLen = packet.readShort();
 	    		String []msgs = new String[msgLen];
 	    		
 	    		for (int i = 0; i < msgLen; i++) {

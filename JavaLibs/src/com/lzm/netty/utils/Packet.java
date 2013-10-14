@@ -47,14 +47,14 @@ public class Packet {
 	public void writeString(String str) {
 		byte[] str_bytes = str.getBytes();
 		int len = str_bytes.length;
-		buf.writeInt(len);
+		buf.writeShort(len);
 		buf.writeBytes(str_bytes);
 	}
 
 	public void writeString(String str, String charset) throws UnsupportedEncodingException {
 		byte[] str_bytes = str.getBytes(charset);
 		int len = str_bytes.length;
-		buf.writeInt(len);
+		buf.writeShort(len);
 		buf.writeBytes(str_bytes);
 	}
 
@@ -87,14 +87,14 @@ public class Packet {
 	}
 
 	public String readString() {
-		int len = buf.readInt();
+		int len = buf.readShort();
 		byte[] _bytes = new byte[len];
 		buf.readBytes(_bytes);
 		return new String(_bytes);
 	}
 
 	public String readString(String charset) throws UnsupportedEncodingException {
-		int len = buf.readInt();
+		int len = buf.readShort();
 		byte[] _bytes = new byte[len];
 		buf.readBytes(_bytes);
 		return new String(_bytes, charset);

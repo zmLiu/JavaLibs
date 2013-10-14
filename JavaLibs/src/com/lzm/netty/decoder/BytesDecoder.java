@@ -14,7 +14,7 @@ public class BytesDecoder extends ByteToMessageDecoder {
 	/**
 	 * 当前需要读取数据的长度
 	 * */
-	private int readLength = 4;
+	private int readLength = 2;
 	
 	/**
 	 * 是否读取消息体长度
@@ -26,12 +26,12 @@ public class BytesDecoder extends ByteToMessageDecoder {
 		//消息体不够长 直接返回
 		if(in.readableBytes() < readLength) return;
 		//读取消息体长度
-		if(readStringLength) readLength = in.readInt();
+		if(readStringLength) readLength = in.readShort();
 		
 		//读取消息体
 		if(in.readableBytes() >= readLength){
 			out.add(in.readBytes(readLength));
-			readLength = 4;
+			readLength = 2;
 			readStringLength = true;
 		}else{
 			//消息体不全，下一次继续读取消息体
