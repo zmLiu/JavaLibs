@@ -5,9 +5,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.lzm.netty.command.ICommand;
 import com.lzm.netty.utils.Packet;
@@ -54,7 +54,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	}
 	
 	//发送字符串数组
-	public static void sendMessages(ChannelHandlerContext ctx,int cmd,String []msgs) throws UnsupportedEncodingException{
+	public static void sendMessages(ChannelHandlerContext ctx,int cmd,String []msgs) throws Exception{
 		
 		int dataLen = 6;//消息长度(2字节) cmd(2字节) 数组长度(2字节)
 		
@@ -85,6 +85,16 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		ctx.flush();
 		
 	}
+	
+	//发送字符串数组
+	public static void sendMessages(List<ChannelHandlerContext> ctxs,int cmd,String []msgs) throws Exception{
+		int length = ctxs.size();
+		for (int i = 0; i < length; i++) {
+			sendMessages(ctxs.get(i), cmd, msgs);
+		}
+	}
+	
+	
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)throws Exception {
