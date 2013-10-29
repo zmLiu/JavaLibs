@@ -12,4 +12,13 @@ public class LogError {
 	    	logger.error(stackTraceElement.toString());
 	    }
 	}
+	
+	public static void throwable(Throwable t){
+		Logger logger = Logger.getRootLogger();
+		logger.error(t.getMessage());
+		StackTraceElement[] error = t.getStackTrace();
+	    for (StackTraceElement stackTraceElement : error) {  
+	    	logger.error(stackTraceElement.toString());
+	    }
+	}
 }
