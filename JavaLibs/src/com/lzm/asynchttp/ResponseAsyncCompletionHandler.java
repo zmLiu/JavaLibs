@@ -7,9 +7,9 @@ import com.lzm.utils.LogError;
 
 public class ResponseAsyncCompletionHandler extends AsyncCompletionHandler<Response> {
 	
-	private HttpCallBack callBack;
+	private AsyncHttpCallBack callBack;
 	
-	public ResponseAsyncCompletionHandler(HttpCallBack callBack) {
+	public ResponseAsyncCompletionHandler(AsyncHttpCallBack callBack) {
 		this.callBack = callBack;
 	}
 

@@ -33,7 +33,7 @@ public class AsyncHttp extends Thread {
 		String url;
 		Map<String, String> params;
 		String method;
-		HttpCallBack callBack;
+		AsyncHttpCallBack callBack;
 		
 		while(true){
 			try {
@@ -42,7 +42,7 @@ public class AsyncHttp extends Thread {
 					objectsLen = objects.length;
 					url = (String) objects[0];
 					method = (String) objects[1];
-					callBack = (HttpCallBack) objects[2];
+					callBack = (AsyncHttpCallBack) objects[2];
 					if(objectsLen == 3){
 						if(method.equals("post")){
 							httpClient.preparePost(url).execute(new ResponseAsyncCompletionHandler(callBack));
@@ -64,7 +64,7 @@ public class AsyncHttp extends Thread {
 	}
 	
 	
-	private void executeRequest(String url,Map<String, String> params,String method,HttpCallBack callBack) throws Exception{
+	private void executeRequest(String url,Map<String, String> params,String method,AsyncHttpCallBack callBack) throws Exception{
 		FluentStringsMap map = params == null ? null : new FluentStringsMap();
 		if(map != null){
 			Iterator<String> it = params.keySet().iterator();
@@ -80,11 +80,11 @@ public class AsyncHttp extends Thread {
 		httpClient.executeRequest(request, new ResponseAsyncCompletionHandler(callBack));
 	}
 	
-	private void addRequest(String url,String method,HttpCallBack callBack){
+	private void addRequest(String url,String method,AsyncHttpCallBack callBack){
 		requestList.add(new Object[]{url,method,callBack});
 	}
 	
-	private void addRequest(String url,Map<String, String> params,String method,HttpCallBack callBack){
+	private void addRequest(String url,Map<String, String> params,String method,AsyncHttpCallBack callBack){
 		requestList.add(new Object[]{url,method,callBack,params});
 	}
 	
@@ -97,19 +97,19 @@ public class AsyncHttp extends Thread {
 		return instance;
 	}
 	
-	public static void post(String url,HttpCallBack callBack) throws Exception{
+	public static void post(String url,AsyncHttpCallBack callBack) throws Exception{
 		getInstance().addRequest(url, "post", callBack);
 	}
 	
-	public static void post(String url,Map<String, String> params,HttpCallBack callBack) throws Exception{
+	public static void post(String url,Map<String, String> params,AsyncHttpCallBack callBack) throws Exception{
 		getInstance().addRequest(url, params, "post", callBack);
 	}
 	
-	public static void get(String url,HttpCallBack callBack) throws Exception{
+	public static void get(String url,AsyncHttpCallBack callBack) throws Exception{
 		getInstance().addRequest(url, "get", callBack);
 	}
 	
-	public static void get(String url,Map<String, String> params,HttpCallBack callBack) throws Exception{
+	public static void get(String url,Map<String, String> params,AsyncHttpCallBack callBack) throws Exception{
 		getInstance().addRequest(url, params, "get", callBack);
 	}
 }
