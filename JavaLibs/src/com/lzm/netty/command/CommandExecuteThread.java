@@ -4,6 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.log4j.Logger;
+
 import com.lzm.utils.LogError;
 
 /**
@@ -26,6 +28,8 @@ public class CommandExecuteThread extends Thread {
 			thread.start();
 			threads[i] = thread;
 		}
+		
+		Logger.getRootLogger().info("ExecuteCommandThread start " + threadCount + "...");
 	}
 
 	//添加任务
