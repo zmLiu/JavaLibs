@@ -12,7 +12,6 @@ encoding//src/com/lzm/netty/decoder/BytesDecoder_Crossdomain.java=UTF-8
 encoding//src/com/lzm/netty/handler/IdleHandler.java=UTF-8
 encoding//src/com/lzm/netty/handler/ServerHandler.java=UTF-8
 encoding//src/com/lzm/netty/utils/Packet.java=UTF-8
-encoding//src/com/lzm/redis/RedisHelper.java=UTF-8
 encoding//src/com/lzm/redis/config/RedisConfig.java=UTF-8
 encoding//src/com/lzm/utils/LogError.java=UTF-8
 encoding//src/com/lzm/utils/PropertiesLoader.java=UTF-8
