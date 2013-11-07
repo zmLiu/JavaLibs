@@ -28,7 +28,6 @@ public class BytesDecoder_Crossdomain extends ByteToMessageDecoder {
 	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,List<Object> out) throws Exception {
-		
 		if(firstMessage){//flash 连接socket需要请求策略文件
 			byte bytes[] = new byte[in.readableBytes()];
 			in.readBytes(bytes);
@@ -44,18 +43,20 @@ public class BytesDecoder_Crossdomain extends ByteToMessageDecoder {
                 ByteBuf xmlBuf = ctx.alloc().buffer(xmlStr.length());
                 xmlBuf.writeBytes(xmlStr.toString().getBytes());
                 
-                ctx.write(xmlBuf);
-                ctx.flush();
+                ctx.channel().writeAndFlush(xmlBuf);
 			}else{
 				ctx.close();
 			}
-		}else if(in.readableBytes() >= readLength){//需要有足够的可读字节
+			return;
+		}
+		
+		while(in.readableBytes() >= readLength){//需要有足够的可读字节
 			//读取消息体长度
 			if(readStringLength) readLength = in.readShort();
 			
 			//读取消息体
 			if(in.readableBytes() >= readLength){
-				out.add(in.readBytes(readLength));
+				out.add(decode(in.readBytes(readLength)));
 				readLength = 2;
 				readStringLength = true;
 			}else{
@@ -69,6 +70,11 @@ public class BytesDecoder_Crossdomain extends ByteToMessageDecoder {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)throws Exception {
 		ctx.close();
+	}
+	
+	protected Object decode(ByteBuf in){
+		
+		return null;
 	}
 
 }

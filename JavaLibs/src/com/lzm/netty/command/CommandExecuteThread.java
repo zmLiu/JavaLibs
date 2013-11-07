@@ -1,10 +1,9 @@
-package com.lzm.netty.handler;
+package com.lzm.netty.command;
 
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.lzm.netty.command.ICommand;
 import com.lzm.utils.LogError;
 
 /**
@@ -30,7 +29,7 @@ public class CommandExecuteThread extends Thread {
 	}
 
 	//添加任务
-	public static void addTask(ICommand command, ChannelHandlerContext ctx,String[] msgs) {
+	public static void addTask(ICommand command, ChannelHandlerContext ctx,Object msgs) {
 		taskQueue.add(new Object[] { command, ctx, msgs });
 	}
 
@@ -38,7 +37,7 @@ public class CommandExecuteThread extends Thread {
 	public void run() {
 		ICommand command;
 		ChannelHandlerContext ctx;
-		String[] msgs;
+		Object msgs;
 		while (true) {
 			try {
 				Object[] objects = taskQueue.poll();
@@ -50,7 +49,7 @@ public class CommandExecuteThread extends Thread {
 				} else {
 					command = (ICommand) objects[0];
 					ctx = (ChannelHandlerContext) objects[1];
-					msgs = (String[]) objects[2];
+					msgs = objects[2];
 					command.execute(ctx, msgs);
 				}
 			} catch (Exception e) {

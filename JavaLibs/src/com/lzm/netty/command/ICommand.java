@@ -11,5 +11,5 @@ public interface ICommand {
 	/**
 	 * 接受到消息
 	 * */
-	void execute(ChannelHandlerContext ctx,String []msgs) throws Exception;
+	void execute(ChannelHandlerContext ctx,Object msgs) throws Exception;
 }
