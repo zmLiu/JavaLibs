@@ -7,21 +7,21 @@ package com.lzm.netty
 	import flash.utils.ByteArray;
 	
 
-	public class NettyClient
+	public class BaseNettyClient
 	{
 		
-		private var _host:String;
-		private var _port:int;
-		private var _socket:NettySocket;
+		protected var _host:String;
+		protected var _port:int;
+		protected var _socket:NettySocket;
 		
-		private var _isConnect:Boolean = false;
+		protected var _isConnect:Boolean = false;
 		
-		private var _commands:Object;
+		protected var _commands:Object;
 		
 		public var onConnectFun:Function;//连接成功的回掉方法
 		public var onCloseFun:Function;//连接关闭的回掉方法
 		
-		public function NettyClient(host:String,port:int){
+		public function BaseNettyClient(host:String,port:int){
 			_host = host;
 			_port = port;
 			_socket = new NettySocket();
@@ -41,7 +41,7 @@ package com.lzm.netty
 		/**
 		 * 连接成功
 		 * */
-		private function onConnect(e:SocketEvent):void{
+		protected function onConnect(e:SocketEvent):void{
 			_isConnect = true;
 			if(onConnectFun) onConnectFun();
 		}
@@ -49,7 +49,7 @@ package com.lzm.netty
 		/**
 		 * 连接关闭
 		 * */
-		private function onClose(e:SocketEvent):void{
+		protected function onClose(e:SocketEvent):void{
 			_isConnect = false;
 			
 			_socket.removeEventListener(SocketEvent.CONNECT,onConnect);
@@ -64,11 +64,18 @@ package com.lzm.netty
 		/**
 		 * 接收到数据
 		 * */
-		private function onData(e:SocketEvent):void{
+		protected function onData(e:SocketEvent):void{
 			var data:Packet = e.data;
 			var commandId:int = data.readShort();
-			var msgs:Array = parseData(data);
-			var vector:Vector.<Function> = _commands[commandId];
+			var msgs:Object = parseData(data);
+			dispatchDatas(commandId,msgs);
+		}
+		
+		/**
+		 * 派发逻辑命令
+		 * */
+		protected function dispatchDatas(cmd:int,msgs:Object):void{
+			var vector:Vector.<Function> = _commands[cmd];
 			if(vector){
 				var length:int = vector.length;
 				for (var i:int = 0; i < length; i++) {
@@ -80,7 +87,7 @@ package com.lzm.netty
 		/**
 		 * 数据解析为数组
 		 * */
-		private function parseData(data:Packet):Array{
+		protected function parseData(data:Packet):Object{
 			var msgs:Array = [];
 			var length:int = data.readShort();
 			for (var i:int = 0; i < length; i++) {
@@ -92,12 +99,12 @@ package com.lzm.netty
 		/**
 		 * 沙箱错误
 		 * */
-		private function onSecurityError(e:SocketEvent):void{}
+		protected function onSecurityError(e:SocketEvent):void{}
 		
 		/**
 		 * io错误
 		 * */
-		private function onIOError(e:SocketEvent):void{}
+		protected function onIOError(e:SocketEvent):void{}
 		
 		
 		/**
@@ -137,7 +144,7 @@ package com.lzm.netty
 		/**
 		 * 发送消息
 		 * */
-		public function sendMessages(cmd:int,msgs:Array):void{
+		public function sendMessages(cmd:int,msgs:Object):void{
 			var data:Packet = new Packet();
 			var length:int = msgs.length;
 			

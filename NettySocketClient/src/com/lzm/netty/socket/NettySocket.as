@@ -57,7 +57,10 @@ package com.lzm.netty.socket
 				readBytes(new ByteArray(),0,bytesAvailable);
 				_firstMessage = false;
 				dispatchEvent(new SocketEvent(SocketEvent.CONNECT));//收到策略文件才算连接成功
-			}else if(bytesAvailable >= _readLength){//需要有足够的可读字节
+				return;
+			}
+			
+			while(bytesAvailable >= _readLength){//需要有足够的可读字节
 				//读取消息体长度
 				if(_readStringLength) _readLength = readShort();
 				
