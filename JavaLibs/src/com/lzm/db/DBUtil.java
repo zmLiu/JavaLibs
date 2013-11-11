@@ -20,6 +20,8 @@ public class DBUtil {
 	public static DBUtil getDBUtil(DBConfig dbConfig, PoolConfig poolConfig) {
 
 		ConnectionFactory factory = new ConnectionFactory(dbConfig);
+		
+		if(poolConfig == null) poolConfig = new PoolConfig();
 
 		Config config = new Config();
 		config.lifo = poolConfig.lifo;
@@ -56,6 +58,21 @@ public class DBUtil {
 		}
 	}
 	//查
+	@SuppressWarnings({ "rawtypes", "deprecation", "unchecked" })
+	public Object queryOneClass(String sql, Object[] params, Class clazz)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			List<Object> list = new QueryRunner().query(conn, sql, params, new BeanListHandler<Object>(clazz));
+			if(list.size() > 0){
+				return list.get(0);
+			}
+			return null;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
+	
+	//查
 	@SuppressWarnings("deprecation")
 	public List<Object[]> queryList(String sql, Object[] params)throws Exception {
 		Connection conn = connPool.borrowObject();
@@ -66,6 +83,22 @@ public class DBUtil {
 			connPool.returnObject(conn);
 		}
 	}
+	
+	//查
+	@SuppressWarnings("deprecation")
+	public Object[] queryOneList(String sql, Object[] params)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			List<Object[]> list = new QueryRunner().query(conn, sql, params, new ArrayListHandler());
+			if(list.size() > 0){
+				return list.get(0);
+			}
+			return null;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
+	
 	//查
 	@SuppressWarnings("deprecation")
 	public List<Map<String, Object>> queryListMap(String sql, Object[] params)throws Exception {
