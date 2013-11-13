@@ -44,9 +44,9 @@ public class AsyncHttp extends Thread {
 					method = (String) objects[1];
 					callBack = (AsyncHttpCallBack) objects[2];
 					if(objectsLen == 3){
-						if(method.equals("post")){
+						if(method.equals(POST)){
 							httpClient.preparePost(url).execute(new ResponseAsyncCompletionHandler(callBack));
-						}else if(method.equals("get")){
+						}else if(method.equals(GET)){
 							httpClient.prepareGet(url).execute(new ResponseAsyncCompletionHandler(callBack));
 						}
 					}else if(objectsLen == 4){
@@ -88,6 +88,9 @@ public class AsyncHttp extends Thread {
 		requestList.add(new Object[]{url,method,callBack,params});
 	}
 	
+	private static final String GET = "GET";
+	private static final String POST = "POST";
+	
 	private static AsyncHttp instance;
 	private static AsyncHttp getInstance(){
 		if(instance == null){
@@ -98,18 +101,18 @@ public class AsyncHttp extends Thread {
 	}
 	
 	public static void post(String url,AsyncHttpCallBack callBack) throws Exception{
-		getInstance().addRequest(url, "post", callBack);
+		getInstance().addRequest(url, POST, callBack);
 	}
 	
 	public static void post(String url,Map<String, String> params,AsyncHttpCallBack callBack) throws Exception{
-		getInstance().addRequest(url, params, "post", callBack);
+		getInstance().addRequest(url, params, POST, callBack);
 	}
 	
 	public static void get(String url,AsyncHttpCallBack callBack) throws Exception{
-		getInstance().addRequest(url, "get", callBack);
+		getInstance().addRequest(url, GET, callBack);
 	}
 	
 	public static void get(String url,Map<String, String> params,AsyncHttpCallBack callBack) throws Exception{
-		getInstance().addRequest(url, params, "get", callBack);
+		getInstance().addRequest(url, params, GET, callBack);
 	}
 }
