@@ -63,6 +63,25 @@ public class RedisHelper {
 	}
 	
 	/**
+	 * 从hashmap中取值
+	 * */
+	public String hashGet(String key,String field){
+		Jedis jedis = getJedis();
+		String reStr = jedis.hget(key, field);
+		returnJedis(jedis);
+		return reStr;
+	}
+	
+	/**
+	 * 往hashmap中存值
+	 * */
+	public void hashSet(String key,String field,String fieldValue){
+		Jedis jedis = getJedis();
+		jedis.hset(key, field, fieldValue);
+		returnJedis(jedis);
+	}
+	
+	/**
 	 * 缓存json对象
 	 * */
 	public void setJson(String key, JSONObject value, int seconds){
