@@ -7,5 +7,8 @@ public class Values {
 
 	/** 60秒 */
 	public static final int _60Seconds = 60;
+	
+	/** 3小时的秒数 */
+	public static final int _3HourSeconds = 3 * 60 *60;
 
 }
