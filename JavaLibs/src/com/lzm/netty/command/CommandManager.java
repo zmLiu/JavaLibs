@@ -45,12 +45,12 @@ public class CommandManager {
 		return connectCloseCommand;
 	}
 
-	// 发送字符串数组
+	// 对单个用户发送消息
 	public static void sendMessages(ChannelHandlerContext ctx, Object msgs) throws Exception {
 		ctx.writeAndFlush(msgs);
 	}
 
-	// 发送字符串数组
+	// 对多个用户发送消息
 	public static void sendMessages(List<ChannelHandlerContext> ctxs, Object msgs) throws Exception {
 		int length = ctxs.size();
 		for (int i = 0; i < length; i++) {
@@ -60,8 +60,8 @@ public class CommandManager {
 	
 	//添加需要执行的命令
 	public static void executeCmd(ICommand command,ChannelHandlerContext ctx,Object msgs) throws Exception{
-		command.execute(ctx, msgs);
-//		CommandExecuteThread.addTask(command, ctx, msgs);
+//		command.execute(ctx, msgs);
+		CommandExecuteThread.addTask(command, ctx, msgs);
 	}
 	
 }
