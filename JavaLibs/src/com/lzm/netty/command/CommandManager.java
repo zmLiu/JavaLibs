@@ -25,7 +25,7 @@ public class CommandManager {
 		return commands.get(cmd);
 	}
 
-	// 设置连接关闭的回掉
+	// 设置新建链接的回掉
 	public static void registerConnectCommand(ICommand connectCommand) {
 		CommandManager.connectCommand = connectCommand;
 	}
