@@ -1,26 +1,15 @@
 package com.lzm.netty.decoder;
 
-import java.util.List;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
+
+import java.util.List;
 
 /**
  * <p>---处理粘包---</p>
  * <p>第一次收到消息 返回策略文件</p>
  * */
-public class BytesDecoder_Crossdomain extends ByteToMessageDecoder {
-	/**
-	 * 当前需要读取数据的长度
-	 * */
-	private int readLength = 2;
-	
-	/**
-	 * 是否读取消息体长度
-	 * */
-	private boolean readStringLength = true;
-	
+public class BytesDecoder_Crossdomain extends BytesDecoder {
 	/**
 	 * 是否为第一次接受到消息
 	 * */

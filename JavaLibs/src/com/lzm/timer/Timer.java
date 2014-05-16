@@ -16,6 +16,10 @@ public class Timer {
 	
 	private boolean isStart;
 	
+	/**
+	 * @param	delay	多长时间调度一次
+	 * @param	repeatCount	重复次数
+	 * */
 	public Timer(int delay,int repeatCount) {
 		this.delay = delay;
 		this.repeatCount = repeatCount;

@@ -41,10 +41,12 @@ public class TimerManager extends Thread {
 					if(timer.currentDelay == timer.getDelay()){
 						timer.currentDelay = 0;
 						timer.onTimer();
-						timer.currentRepeatCount += 1;
-						if(timer.currentRepeatCount == timer.getRepeatCount()){
-							timer.onTimerOver();
-							TimerManager.removeTimer(timer);
+						if(timer.getRepeatCount() > 0){
+							timer.currentRepeatCount += 1;
+							if(timer.currentRepeatCount == timer.getRepeatCount()){
+								timer.onTimerOver();
+								TimerManager.removeTimer(timer);
+							}
 						}
 					}
 				}
