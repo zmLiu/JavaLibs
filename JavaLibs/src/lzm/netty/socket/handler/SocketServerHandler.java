@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * 逻辑处理分发
  * */
-public class ServerHandler extends SimpleChannelInboundHandler<Object> {
+public class SocketServerHandler extends SimpleChannelInboundHandler<Object> {
 	
 	@Override
 	public void handlerAdded(ChannelHandlerContext ctx) throws Exception {

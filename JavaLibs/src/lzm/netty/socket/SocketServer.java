@@ -10,7 +10,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-public class NettySocketServer {
+public class SocketServer {
 	// 服务器监听端口
 	public int port;
 	// 连接空闲时间
@@ -28,7 +28,7 @@ public class NettySocketServer {
 	 * @param port
 	 *            监听端口
 	 * */
-	public NettySocketServer(int port) {
+	public SocketServer(int port) {
 		this.port = port;
 	}
 
@@ -45,7 +45,7 @@ public class NettySocketServer {
 				.channel(NioServerSocketChannel.class)
 				.handler(new LoggingHandler(LogLevel.INFO))
 				.childOption(ChannelOption.TCP_NODELAY, false)
-				.childHandler(new NettySocketChannelInitializer(idleTimeSeconds));
+				.childHandler(new SocketChannelInitializer(idleTimeSeconds));
 
 			// ChannelFuture f = b.bind(port).sync();
 			// f.channel().closeFuture().sync();
