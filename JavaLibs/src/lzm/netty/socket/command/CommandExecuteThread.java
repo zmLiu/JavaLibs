@@ -13,8 +13,8 @@ import org.apache.log4j.Logger;
  * */
 public class CommandExecuteThread extends Thread {
 
-	private static ConcurrentLinkedQueue<Object[]> taskQueue = new ConcurrentLinkedQueue<Object[]>();
-	
+	private static int threadUseIndex;
+	private static int threadCount;
 	private static CommandExecuteThread []threads;
 	
 	// 初始化命令执行线程
@@ -22,11 +22,13 @@ public class CommandExecuteThread extends Thread {
 		if(threads != null){
 			throw new Exception("ExecuteCommandThread already init.");
 		}
-		threads = new CommandExecuteThread[threadCount];
+		CommandExecuteThread.threadUseIndex = 0;
+		CommandExecuteThread.threadCount = threadCount;
+		CommandExecuteThread.threads = new CommandExecuteThread[CommandExecuteThread.threadCount];
 		for (int i = 0; i < threadCount; i++) {
 			CommandExecuteThread thread = new CommandExecuteThread();
 			thread.start();
-			threads[i] = thread;
+			CommandExecuteThread.threads[i] = thread;
 		}
 		
 		Logger.getRootLogger().info("ExecuteCommandThread start " + threadCount + "...");
@@ -34,9 +36,14 @@ public class CommandExecuteThread extends Thread {
 
 	//添加任务
 	public static void addTask(ICommand command, ChannelHandlerContext ctx,Object msgs) {
-		taskQueue.add(new Object[] { command, ctx, msgs });
+		threads[threadUseIndex].taskQueue.add(new Object[] { command, ctx, msgs });
+		
+		threadUseIndex++;
+		if(threadUseIndex == threadCount) threadUseIndex = 0;
 	}
-
+	
+	private ConcurrentLinkedQueue<Object[]> taskQueue = new ConcurrentLinkedQueue<Object[]>();
+	
 	@Override
 	public void run() {
 		ICommand command;
@@ -49,7 +56,7 @@ public class CommandExecuteThread extends Thread {
 					command = null;
 					ctx = null;
 					msgs = null;
-					Thread.sleep(100L);
+					Thread.sleep(30L);
 				} else {
 					command = (ICommand) objects[0];
 					ctx = (ChannelHandlerContext) objects[1];
