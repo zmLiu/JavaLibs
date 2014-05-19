@@ -1,6 +1,7 @@
 package lzm.netty.socket;
 
 import lzm.netty.socket.command.CommandExecuteThread;
+import lzm.netty.socket.config.SocketServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -11,16 +12,12 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 public class SocketServer {
-	// 服务器监听端口
-	public int port;
-	// 连接空闲时间
-	public int idleTimeSeconds = 60;
-	// 执行命令的线程数
-	public int executeCommandThreadCount = 1;
-
+	
 	private ServerBootstrap boot;
 	private EventLoopGroup bossGroup;
 	private EventLoopGroup workerGroup;
+	
+	private SocketServerConfig config;
 
 	/**
 	 * 创建服务器
@@ -28,16 +25,16 @@ public class SocketServer {
 	 * @param port
 	 *            监听端口
 	 * */
-	public SocketServer(int port) {
-		this.port = port;
+	public SocketServer(SocketServerConfig config) {
+		this.config = config;
 	}
 
 	public void run() throws Exception {
-		CommandExecuteThread.initExecuteCommandThread(executeCommandThreadCount);
+		CommandExecuteThread.initExecuteCommandThread(config.executeCommandThreads);
 
 		boot = new ServerBootstrap();
-		bossGroup = new NioEventLoopGroup(0);
-		workerGroup = new NioEventLoopGroup(0);
+		bossGroup = new NioEventLoopGroup(config.bossGroupThreads);
+		workerGroup = new NioEventLoopGroup(config.workerGroupThreads);
 		try {
 			boot.option(ChannelOption.TCP_NODELAY, true).childOption(ChannelOption.TCP_NODELAY, true);
 
@@ -45,12 +42,10 @@ public class SocketServer {
 				.channel(NioServerSocketChannel.class)
 				.handler(new LoggingHandler(LogLevel.INFO))
 				.childOption(ChannelOption.TCP_NODELAY, false)
-				.childHandler(new SocketChannelInitializer(idleTimeSeconds));
+				.childHandler(new SocketChannelInitializer(config.idleTimeSeconds));
 
-			// ChannelFuture f = b.bind(port).sync();
-			// f.channel().closeFuture().sync();
-			ChannelFuture f = boot.bind(port);
-			f.sync();
+			ChannelFuture f = boot.bind(config.port).sync();
+			f.channel().closeFuture().sync();
 		} catch (Exception err) {
 			bossGroup.shutdownGracefully();
 			workerGroup.shutdownGracefully();
