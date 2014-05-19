@@ -15,10 +15,14 @@ public class BytesDecoder_Crossdomain extends BytesDecoder {
 	 * */
 	private boolean firstMessage = true;
 	
+	/** 请求策略文件命令的长度 */
+	private final int crossdomainRequestLength = 23;
+	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,List<Object> out) throws Exception {
 		if(firstMessage){//flash 连接socket需要请求策略文件
-			byte bytes[] = new byte[in.readableBytes()];
+			if(in.readableBytes() < crossdomainRequestLength) return;//请求策略文件的 字符串长度不足。
+			byte bytes[] = new byte[crossdomainRequestLength];
 			in.readBytes(bytes);
 			String str = new String(bytes);
 			if(str.indexOf("<policy-file-request/>") != -1){
