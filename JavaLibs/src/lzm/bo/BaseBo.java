@@ -1,96 +1,66 @@
 package lzm.bo;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
 import com.alibaba.fastjson.JSONObject;
 
 public class BaseBo {
+	
+	/**
+	 * 把json的数据解析到对象
+	 * */
 	public void parseJson(JSONObject data) throws Exception {
-		Class<?> clazz = this.getClass();
-		Method[] methods = clazz.getMethods();
-		Class<?>[] paramTypes;
-
-		int methodsLength = methods.length;
-
-		Method method;
-		String methodName;
-		String propertyValue;
-		Class<?> paramType;
-
-		Object[] paramValue = new Object[1];
-
-		for (int i = 0; i < methodsLength; i++) {
-			method = methods[i];
-			methodName = method.getName();
-			paramTypes = method.getParameterTypes();
-			if (paramTypes.length == 1 && methodName.startsWith("set")) {
-
-				propertyValue = data.getString(methodName.substring(3,methodName.length()).toLowerCase());
-				paramType = paramTypes[0];
-
-				if (paramType == int.class) {
-					paramValue[0] = Integer.valueOf(propertyValue);
-					method.invoke(this, paramValue);
-				} else if (paramType == float.class) {
-					paramValue[0] = Float.valueOf(propertyValue);
-					method.invoke(this, paramValue);
-				} else if (paramType == double.class) {
-					paramValue[0] = Double.valueOf(propertyValue);
-					method.invoke(this, paramValue);
-				} else if (paramType == String.class) {
-					paramValue[0] = propertyValue;
-					method.invoke(this, paramValue);
-				} else if (paramType == long.class) {
-					paramValue[0] = Long.valueOf(propertyValue);
-					method.invoke(this, paramValue);
-				} else if (paramType == boolean.class) {
-					paramValue[0] = Boolean.valueOf(propertyValue);
-					method.invoke(this, paramValue);
-				}
+		BeanInfo beanInfo = Introspector.getBeanInfo(this.getClass());
+		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+		
+		int propertyLength = propertyDescriptors.length;
+		PropertyDescriptor propertyDescriptor;
+		Method writeMethod;
+		String propertyName;
+		Object[] methodParams = new Object[1];
+		
+		//第0个为class属性，是保留属性，所以从1开始
+		for (int i = 1; i < propertyLength; i++) {
+			propertyDescriptor = propertyDescriptors[i];
+			propertyName = propertyDescriptor.getName();
+			writeMethod = propertyDescriptor.getWriteMethod();
+			if(writeMethod == null){
+				continue;
 			}
+			methodParams[0] = data.get(propertyName);
+			writeMethod.invoke(this, methodParams);
 		}
 	}
 
+	/**
+	 * 把对象转换为json
+	 * */
 	public JSONObject toJson() throws Exception {
-		JSONObject json = new JSONObject();
-
-		Class<?> clazz = this.getClass();
-		Method[] methods = clazz.getMethods();
-		Class<?>[] paramTypes;
-
-		int methodsLength = methods.length;
-
-		Method method;
-		String methodName;
+		BeanInfo beanInfo = Introspector.getBeanInfo(this.getClass());
+		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+		
+		int propertyLength = propertyDescriptors.length;
+		PropertyDescriptor propertyDescriptor;
+		Method readMethod;
 		String propertyName;
-
-		Object value;
-		Object[] paramValue = new Object[0];
-		Class<?> returnType;
-
-		for (int i = 0; i < methodsLength; i++) {
-			method = methods[i];
-			methodName = method.getName();
-			
-			paramTypes = method.getParameterTypes();
-
-			if (methodName.equals("getClass"))
+		Object[] methodParams = new Object[0];
+		
+		JSONObject json = new JSONObject();
+		
+		//第0个为class属性，是保留属性，所以从1开始
+		for (int i = 1; i < propertyLength; i++) {
+			propertyDescriptor = propertyDescriptors[i];
+			propertyName = propertyDescriptor.getName();
+			readMethod = propertyDescriptor.getReadMethod();
+			if(readMethod == null){
 				continue;
-
-			if (paramTypes.length == 0 && methodName.startsWith("get")) {
-				
-				returnType = method.getReturnType();
-				
-				if(returnType == int.class || returnType == float.class || returnType == double.class || returnType == String.class || returnType == long.class || returnType == boolean.class){
-					propertyName = methodName.substring(3, methodName.length()).toLowerCase();
-
-					value = method.invoke(this, paramValue);
-
-					json.put(propertyName, value);
-				}
 			}
+			json.put(propertyName, readMethod.invoke(this, methodParams));
 		}
-
+		
 		return json;
 	}
 }
