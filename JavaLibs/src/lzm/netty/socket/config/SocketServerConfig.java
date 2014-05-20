@@ -12,6 +12,6 @@ public class SocketServerConfig {
 	
 	public static int workerGroupThreads = 0;//workerGroup的线程数
 	
-	public static boolean log = true;//是否输出log信息
+	public static boolean log = false;//是否输出log信息
 	
 }
