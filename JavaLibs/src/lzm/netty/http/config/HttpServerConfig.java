@@ -30,4 +30,6 @@ public class HttpServerConfig {
 	public static boolean send_file_list = true;//是否可以请求文件列表
 	
 	public static String index_file = "index.html";//默认页
+	
+	public static boolean log = true;//是否输出log信息
 }

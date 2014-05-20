@@ -13,28 +13,25 @@ import lzm.netty.socket.config.SocketServerConfig;
 
 public class SocketServer {
 	
-	private ServerBootstrap boot;
-	private EventLoopGroup bossGroup;
-	private EventLoopGroup workerGroup;
-
 	public void run() throws Exception {
 		CommandExecuteThread.initExecuteCommandThread(SocketServerConfig.executeCommandThreads);
 
-		boot = new ServerBootstrap();
-		bossGroup = new NioEventLoopGroup(SocketServerConfig.bossGroupThreads);
-		workerGroup = new NioEventLoopGroup(SocketServerConfig.workerGroupThreads);
+		ServerBootstrap b = new ServerBootstrap();
+		EventLoopGroup bossGroup = new NioEventLoopGroup(SocketServerConfig.bossGroupThreads);
+		EventLoopGroup workerGroup = new NioEventLoopGroup(SocketServerConfig.workerGroupThreads);
 		try {
-			boot.option(ChannelOption.TCP_NODELAY, true).childOption(ChannelOption.TCP_NODELAY, true);
+			b.option(ChannelOption.TCP_NODELAY, true).childOption(ChannelOption.TCP_NODELAY, true);
 
-			boot.group(bossGroup, workerGroup)
+			b.group(bossGroup, workerGroup)
 				.channel(NioServerSocketChannel.class)
-				.handler(new LoggingHandler(LogLevel.INFO))
 				.childOption(ChannelOption.TCP_NODELAY, false)
 				.childHandler(new SocketChannelInitializer());
+			
+			if(SocketServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));
 
-			ChannelFuture f = boot.bind(SocketServerConfig.port).sync();
+			ChannelFuture f = b.bind(SocketServerConfig.port).sync();
 			f.channel().closeFuture().sync();
-		} catch (Exception err) {
+		} finally {
 			bossGroup.shutdownGracefully();
 			workerGroup.shutdownGracefully();
 		}

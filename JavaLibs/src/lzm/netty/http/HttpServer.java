@@ -20,8 +20,9 @@ public class HttpServer {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
-             .handler(new LoggingHandler(LogLevel.INFO))
              .childHandler(new HttpServerInitializer());
+            
+            if(HttpServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));
 
             Channel ch = b.bind(HttpServerConfig.port).sync().channel();
             ch.closeFuture().sync();
@@ -34,6 +35,7 @@ public class HttpServer {
 	public static void main(String[] args) throws Exception {
 		HttpServerConfig.port = 9001;
 		HttpServerConfig.server_path = "./";
+//		HttpServerConfig.log = false;
 		
 		HttpServiceManager.registerService("test", new TestService());
 		HttpServiceManager.registerService("test1", "lzm.netty.http.test.Test1Service");

@@ -143,15 +143,15 @@ public class StaticFileService extends AbstractHttpService {
             @Override
             public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
                 if (total < 0) {
-                    System.err.println("Transfer progress: " + progress);
+                    if(HttpServerConfig.log) System.err.println("Transfer progress: " + progress);
                 } else {
-                    System.err.println("Transfer progress: " + progress + " / " + total);
+                	if(HttpServerConfig.log) System.err.println("Transfer progress: " + progress + " / " + total);
                 }
             }
 
             @Override
             public void operationComplete(ChannelProgressiveFuture future) throws Exception {
-                System.err.println("Transfer complete.");
+            	if(HttpServerConfig.log) System.err.println("Transfer complete.");
             }
         });
 
