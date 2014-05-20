@@ -20,6 +20,7 @@ public class BaseBo {
 		PropertyDescriptor propertyDescriptor;
 		Method writeMethod;
 		String propertyName;
+		Object propertyValue;
 		Object[] methodParams = new Object[1];
 		
 		//第0个为class属性，是保留属性，所以从1开始
@@ -30,7 +31,11 @@ public class BaseBo {
 			if(writeMethod == null){
 				continue;
 			}
-			methodParams[0] = data.get(propertyName);
+			propertyValue = data.get(propertyName);
+			if(propertyValue == null){
+				continue;
+			}
+			methodParams[0] = propertyValue;
 			writeMethod.invoke(this, methodParams);
 		}
 	}
