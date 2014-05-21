@@ -40,7 +40,7 @@ public class ConnectionFactory implements PoolableObjectFactory<Connection> {
 
 	@Override
 	public boolean validateObject(Connection conn) {
-		//坚持对象是否可用
+		//检测对象是否可用
 		try {
 			return !conn.isClosed();
 		} catch (SQLException e) {
