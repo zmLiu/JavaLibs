@@ -172,6 +172,8 @@ public class DBUtil {
 	public static String selectSql_MySql(String table,Class clazz,Map<String, Object> where) throws Exception{
 		table.trim();
 		
+		secureData(where);
+		
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 		
@@ -267,6 +269,9 @@ public class DBUtil {
 	 * @param	where	条件
 	 * */
 	public static String deleteSql_MySql(String table,Map<String, Object> where){
+		
+		secureData(where);
+		
 		StringBuilder query = new StringBuilder("DELETE FROM `");
 		query.append(table);
 		query.append("`");
@@ -300,6 +305,9 @@ public class DBUtil {
 			return null;
 		}
 		
+		secureData(set);
+		secureData(where);
+		
 		StringBuilder query = new StringBuilder("UPDATE `");
 		query.append(table);
 		query.append("` SET ");
@@ -331,6 +339,22 @@ public class DBUtil {
 		
 		return query.toString();
 	}
+	
+	/** 防止sql注入 */
+	private static void secureData(Map<String, Object> data){
+		String key;
+		Object value;
+		for (Iterator<String> iterator = data.keySet().iterator(); iterator.hasNext();) {
+			key = iterator.next();
+			value = data.get(key);
+			
+			data.put(key, TransactSQLInjection(value.toString()));
+		}
+	}
+	
+	public static String TransactSQLInjection(String str){
+          return str.replaceAll(".*([';]+|(--)+).*", "");
+    }
 	
 	
 	//缓存beaninfo
