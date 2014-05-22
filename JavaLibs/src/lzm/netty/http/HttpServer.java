@@ -1,8 +1,5 @@
 package lzm.netty.http;
 
-import lzm.netty.http.config.HttpServerConfig;
-import lzm.netty.http.service.HttpServiceManager;
-import lzm.netty.http.test.TestService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -10,6 +7,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import lzm.netty.http.config.HttpServerConfig;
+import lzm.netty.http.service.HttpServiceManager;
+import lzm.netty.http.test.TestService;
 
 public class HttpServer {
 	
