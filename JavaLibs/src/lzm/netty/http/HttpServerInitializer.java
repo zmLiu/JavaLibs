@@ -7,9 +7,6 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
-import lzm.netty.http.config.HttpServerConfig;
 import lzm.netty.http.handler.HttpServerHandler;
 
 public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
@@ -18,8 +15,8 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
 	protected void initChannel(SocketChannel ch) throws Exception {
 		ChannelPipeline pipeline = ch.pipeline();
 		
-		pipeline.addLast("readTimeoutHandler", new ReadTimeoutHandler(HttpServerConfig.time_out));
-        pipeline.addLast("writeTimeoutHandler", new WriteTimeoutHandler(HttpServerConfig.time_out));
+//		pipeline.addLast("readTimeoutHandler", new ReadTimeoutHandler(HttpServerConfig.time_out));
+//     	pipeline.addLast("writeTimeoutHandler", new WriteTimeoutHandler(HttpServerConfig.time_out));
 		
 		pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("decoder", new HttpRequestDecoder());
