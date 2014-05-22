@@ -39,10 +39,13 @@ public class BaseBo {
 		Object propertyValue;
 		Object[] methodParams = new Object[1];
 		
-		//第0个为class属性，是保留属性，所以从1开始
-		for (int i = 1; i < propertyLength; i++) {
+		for (int i = 0; i < propertyLength; i++) {
 			propertyDescriptor = propertyDescriptors[i];
 			propertyName = propertyDescriptor.getName();
+			if(propertyName.equals("class")){
+				continue;
+			}
+			
 			writeMethod = propertyDescriptor.getWriteMethod();
 			if(writeMethod == null){
 				continue;
@@ -71,17 +74,20 @@ public class BaseBo {
 		
 		JSONObject json = new JSONObject();
 		
-		//第0个为class属性，是保留属性，所以从1开始
-		for (int i = 1; i < propertyLength; i++) {
+		for (int i = 0; i < propertyLength; i++) {
 			propertyDescriptor = propertyDescriptors[i];
 			propertyName = propertyDescriptor.getName();
+			if(propertyName.equals("class")){
+				continue;
+			}
+			
 			readMethod = propertyDescriptor.getReadMethod();
 			if(readMethod == null){
 				continue;
 			}
+			
 			json.put(propertyName, readMethod.invoke(this, methodParams));
 		}
-		
 		return json;
 	}
 }
