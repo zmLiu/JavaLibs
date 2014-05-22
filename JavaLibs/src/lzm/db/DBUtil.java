@@ -1,6 +1,13 @@
 package lzm.db;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -154,5 +161,190 @@ public class DBUtil {
 			connPool.returnObject(conn);
 		}
 	}
+	
+	/** 
+	 * 获取一条查询语句  
+	 * @param	table	表名
+	 * @param	clazz	对应的bean类
+	 * @param	where	查询条件
+	 * */
+	@SuppressWarnings("rawtypes")
+	public static String selectSql_MySql(String table,Class clazz,Map<String, Object> where) throws Exception{
+		table.trim();
+		
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT ");
+		
+		BeanInfo beanInfo = getBeanInfo(clazz);
+		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+		PropertyDescriptor propertyDescriptor;
+		
+		int propertyLength = propertyDescriptors.length;
+		String propertyName;
+		for (int i = 0; i < propertyLength; i++) {
+			propertyDescriptor = propertyDescriptors[i];
+			propertyName = propertyDescriptor.getName();
+			if(propertyName.equals("class")){
+				continue;
+			}
+			if(propertyDescriptor.getReadMethod() != null && propertyDescriptor.getWriteMethod() != null){
+				query.append(propertyName).append(",");
+			}
+		}
+		query.deleteCharAt(query.length() - 1);
+		query.append(" FROM `").append(table).append("`");
+		
+		if(where != null && where.size() > 0){
+			query.append(" WHERE ");
+			String key;
+			Object value;
+			for (Iterator<String> iterator = where.keySet().iterator(); iterator.hasNext();) {
+				key = iterator.next();
+				value = where.get(key);
+				
+				query.append("`").append(key).append("` = '").append(value).append("' AND ");
+			}
+			
+			int queryLength = query.length();
+			query.delete(queryLength - 5, queryLength);
+		}
+		
+		return query.toString();
+	}
+	
+	
+	/**
+	 * 获取一条插入语句
+	 * @param	table	表名
+	 * @param 	data	需要插入的bean对象
+	 * */
+	public static String insertSql_MySql(String table,Object data) throws Exception{
+		StringBuilder query = new StringBuilder("INSERT IGNORE INTO `");
+		query.append(table);
+		query.append("` SET ");
+		
+		BeanInfo beanInfo = getBeanInfo(data.getClass());
+		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+		
+		int propertyLength = propertyDescriptors.length;
+		PropertyDescriptor propertyDescriptor;
+		Method readMethod;
+		String propertyName;
+		Object[] methodParams = new Object[0];
+		Object value;
+		
+		for (int i = 0; i < propertyLength; i++) {
+			propertyDescriptor = propertyDescriptors[i];
+			propertyName = propertyDescriptor.getName();
+			if(propertyName.equals("class")){
+				continue;
+			}
+			
+			readMethod = propertyDescriptor.getReadMethod();
+			if(readMethod == null){
+				continue;
+			}
+			
+			value = readMethod.invoke(data, methodParams);
+			if(value != null){
+				query.append("`");
+				query.append(propertyName);
+				query.append("` = '");
+				query.append(readMethod.invoke(data, methodParams));
+				query.append("', ");
+			}
+		}
+		
+		int queryLength = query.length();
+		query.delete(queryLength - 2, queryLength);
+		
+		return query.toString();
+	}
+	
+	/**
+	 * 获取一条sql语句
+	 * @param	table	表名
+	 * @param	where	条件
+	 * */
+	public static String deleteSql_MySql(String table,Map<String, Object> where){
+		StringBuilder query = new StringBuilder("DELETE FROM `");
+		query.append(table);
+		query.append("`");
+		
+		if(where != null && where.size() > 0){
+			query.append(" WHERE ");
+			String key;
+			Object value;
+			for (Iterator<String> iterator = where.keySet().iterator(); iterator.hasNext();) {
+				key = iterator.next();
+				value = where.get(key);
+				
+				query.append("`").append(key).append("` = '").append(value).append("' AND ");
+			}
+			
+			int queryLength = query.length();
+			query.delete(queryLength - 5, queryLength);
+		}
+		
+		return query.toString();
+	}
+	
+	/**
+	 * 获取一条删除语句
+	 * @param	table	表名
+	 * @param	set		更新字段
+	 * @param	where	更新条件
+	 * */
+	public static String updateSql_MySql(String table,Map<String, Object> set,Map<String, Object> where){
+		if(set == null || set.size() == 0){
+			return null;
+		}
+		
+		StringBuilder query = new StringBuilder("UPDATE `");
+		query.append(table);
+		query.append("` SET ");
+		
+		String key;
+		Object value;
+		for (Iterator<String> iterator = set.keySet().iterator(); iterator.hasNext();) {
+			key = iterator.next();
+			value = set.get(key);
+			
+			query.append("`").append(key).append("` = '").append(value).append("', ");
+		}
+		
+		int queryLength = query.length();
+		query.delete(queryLength - 2, queryLength);
+		
+		if(where != null && where.size() > 0){
+			query.append(" WHERE ");
+			for (Iterator<String> iterator = where.keySet().iterator(); iterator.hasNext();) {
+				key = iterator.next();
+				value = where.get(key);
+				
+				query.append("`").append(key).append("` = '").append(value).append("' AND ");
+			}
+			
+			queryLength = query.length();
+			query.delete(queryLength - 5, queryLength);
+		}
+		
+		return query.toString();
+	}
+	
+	
+	//缓存beaninfo
+	@SuppressWarnings("rawtypes")
+	private static Map<Class, BeanInfo> beanInfoCache = new HashMap<Class, BeanInfo>(); 
+	private static BeanInfo getBeanInfo(@SuppressWarnings("rawtypes") Class clazz) throws IntrospectionException{
+		BeanInfo beanInfo = beanInfoCache.get(clazz);
+		if(beanInfo == null){
+			beanInfo = Introspector.getBeanInfo(clazz);
+			beanInfoCache.put(clazz, beanInfo);
+		}
+		return beanInfo;
+	}
+	
+	
 
 }
