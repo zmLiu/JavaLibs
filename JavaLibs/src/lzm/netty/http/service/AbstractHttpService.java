@@ -54,6 +54,11 @@ public abstract class AbstractHttpService implements IHttpService {
 		if(httpRequest.content().isReadable()) decoderPostParams();
 	}
 	
+	/** 过滤器，如果返回false将不会调用index方法 */
+	public boolean filter(){
+		return true;
+	}
+	
 	/**
 	 * 解析Get Params
 	 * */

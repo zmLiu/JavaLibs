@@ -44,7 +44,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			httpService = new StaticFileService();
 		}
 		httpService.decoderRequest(this, ctx, request, queryStringDecoder);
-		httpService.index();
+		if(httpService.filter()) httpService.index();
 	}
 	
 	@Override
