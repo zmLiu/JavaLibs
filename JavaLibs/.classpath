@@ -10,9 +10,9 @@
 	<classpathentry kind="lib" path="libs/slf4j-api-1.5.6.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-log4j12-1.5.6.jar"/>
 	<classpathentry kind="lib" path="libs/xmemcached-1.4.1.jar"/>
-	<classpathentry kind="lib" path="libs/asynchttpclient-netty.jar"/>
 	<classpathentry kind="lib" path="libs/javassist-3.18.1-GA.jar"/>
 	<classpathentry kind="lib" path="libs/jedis.jar"/>
 	<classpathentry kind="lib" path="libs/netty-all-4.0.19.Final.jar"/>
+	<classpathentry kind="lib" path="libs/asyncHttpClient-netty-1.8.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

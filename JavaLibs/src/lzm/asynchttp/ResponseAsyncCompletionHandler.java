@@ -1,6 +1,5 @@
 package lzm.asynchttp;
-import lzm.utils.LogError;
-
+import org.apache.log4j.Logger;
 import org.asynchttpclient.AsyncCompletionHandler;
 import org.asynchttpclient.Response;
 
@@ -23,7 +22,12 @@ public class ResponseAsyncCompletionHandler extends AsyncCompletionHandler<Respo
     @Override
     public void onThrowable(Throwable t){
     	if(this.callBack == null){
-    		LogError.throwable(t);
+    		Logger logger = Logger.getRootLogger();
+    		logger.error(t.getMessage());
+    		StackTraceElement[] error = t.getStackTrace();
+    	    for (StackTraceElement stackTraceElement : error) {  
+    	    	logger.error(stackTraceElement.toString());
+    	    }
     	}else{
     		this.callBack.onError(t);
     	}
