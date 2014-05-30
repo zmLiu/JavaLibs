@@ -48,6 +48,8 @@ import java.util.regex.Pattern;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.apache.log4j.Logger;
+
 import lzm.netty.http.config.HttpServerConfig;
 
 public class StaticFileService extends AbstractHttpService {
@@ -143,9 +145,9 @@ public class StaticFileService extends AbstractHttpService {
             @Override
             public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
                 if (total < 0) {
-                    if(HttpServerConfig.log) System.err.println("Transfer progress: " + progress);
+                    if(HttpServerConfig.log) Logger.getRootLogger().info("Transfer progress: " + progress);
                 } else {
-                	if(HttpServerConfig.log) System.err.println("Transfer progress: " + progress + " / " + total);
+                	if(HttpServerConfig.log) Logger.getRootLogger().info("Transfer progress: " + progress + " / " + total);
                 }
             }
 
