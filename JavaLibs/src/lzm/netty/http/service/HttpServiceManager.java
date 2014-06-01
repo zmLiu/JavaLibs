@@ -23,21 +23,20 @@ public class HttpServiceManager {
 	}
 	
 	public static AbstractHttpService getService(String path) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-		AbstractHttpService service = serviceClazzs.get(path);
-		if(service != null) {
-			return service.getClass().newInstance();
-		}
+		AbstractHttpService service = null;
 		
 		String serviceClazzName = serviceNames.get(path);
 		if(serviceClazzName != null){
 			service = (AbstractHttpService) Class.forName(serviceClazzName).newInstance();
-			if(service != null){
-				registerService(path, service);
-			}
 			return service;
 		}
 		
-		return null;
+		service = serviceClazzs.get(path);
+		if(service != null) {
+			return service.getClass().newInstance();
+		}
+		
+		return service;
 	}
 	
 }
