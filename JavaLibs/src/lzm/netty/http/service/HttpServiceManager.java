@@ -31,6 +31,9 @@ public class HttpServiceManager {
 		String serviceClazzName = serviceNames.get(path);
 		if(serviceClazzName != null){
 			service = (AbstractHttpService) Class.forName(serviceClazzName).newInstance();
+			if(service != null){
+				registerService(path, service);
+			}
 			return service;
 		}
 		
