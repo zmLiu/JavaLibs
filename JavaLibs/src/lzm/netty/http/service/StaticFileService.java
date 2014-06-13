@@ -153,7 +153,7 @@ public class StaticFileService extends AbstractHttpService {
 
             @Override
             public void operationComplete(ChannelProgressiveFuture future) throws Exception {
-            	if(HttpServerConfig.log) System.err.println("Transfer complete.");
+            	if(HttpServerConfig.log) Logger.getRootLogger().info("Transfer complete.");
             }
         });
 
