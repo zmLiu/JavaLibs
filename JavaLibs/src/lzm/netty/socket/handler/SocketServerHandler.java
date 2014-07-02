@@ -31,7 +31,7 @@ public class SocketServerHandler extends SimpleChannelInboundHandler<Object> {
 	protected void channelRead0(ChannelHandlerContext ctx, Object msgs)throws Exception {
 		try {
 			JSONObject jsonObject = (JSONObject) msgs;
-			int cmd = jsonObject.getIntValue("cmd");
+			String cmd = jsonObject.getString("cmd");
 			ICommand command = CommandManager.getCommand(cmd);
 			if(command != null){
 				CommandManager.executeCmd(command, ctx, msgs);

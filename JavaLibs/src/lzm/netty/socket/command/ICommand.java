@@ -6,7 +6,7 @@ public interface ICommand {
 	/**
 	 * 获取命令号
 	 * */
-	int getCmd();
+	String getCmd();
 	
 	/**
 	 * 接受到消息

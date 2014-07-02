@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CommandManager {
 	// 所有命令
-	private static HashMap<Integer, ICommand> commands = new HashMap<Integer, ICommand>();
+	private static HashMap<String, ICommand> commands = new HashMap<String, ICommand>();
 
 	// 新用户连接的回掉
 	private static ICommand connectCommand;
@@ -16,12 +16,12 @@ public class CommandManager {
 	private static ICommand connectCloseCommand;
 
 	// 注册命令
-	public static void registerCommand(int cmd, ICommand command) {
+	public static void registerCommand(String cmd, ICommand command) {
 		commands.put(cmd, command);
 	}
 
 	// 获取命令
-	public static ICommand getCommand(int cmd) {
+	public static ICommand getCommand(String cmd) {
 		return commands.get(cmd);
 	}
 
