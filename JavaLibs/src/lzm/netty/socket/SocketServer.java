@@ -8,13 +8,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import lzm.netty.socket.command.CommandExecuteThread;
 import lzm.netty.socket.config.SocketServerConfig;
 
 public class SocketServer {
 	
 	public void run() throws Exception {
-		CommandExecuteThread.initExecuteCommandThread(SocketServerConfig.executeCommandThreads);
+		//CommandExecuteThread.initExecuteCommandThread(SocketServerConfig.executeCommandThreads);
 
 		ServerBootstrap b = new ServerBootstrap();
 		EventLoopGroup bossGroup = new NioEventLoopGroup(SocketServerConfig.bossGroupThreads);
