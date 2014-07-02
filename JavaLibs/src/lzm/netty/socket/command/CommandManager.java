@@ -17,6 +17,9 @@ public class CommandManager {
 
 	// 注册命令
 	public static void registerCommand(String cmd, ICommand command) {
+		if(getCommand(cmd) != null){
+			throw new Error("cmd repeat");//命令重复
+		}
 		commands.put(cmd, command);
 	}
 
