@@ -1,35 +1,21 @@
 package lzm.bo;
 
 import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
+import lzm.utils.BeanUtil;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 public class BaseBo {
-	
-	//缓存beaninfo
-	@SuppressWarnings("rawtypes")
-	private static Map<Class, BeanInfo> beanInfoCache = new HashMap<Class, BeanInfo>(); 
-	
-	private static BeanInfo getBeanInfo(@SuppressWarnings("rawtypes") Class clazz) throws IntrospectionException{
-		BeanInfo beanInfo = beanInfoCache.get(clazz);
-		if(beanInfo == null){
-			beanInfo = Introspector.getBeanInfo(clazz);
-			beanInfoCache.put(clazz, beanInfo);
-		}
-		return beanInfo;
-	}
 	
 	/**
 	 * 把json的数据解析到对象
 	 * */
 	public void parseJson(JSONObject data) throws Exception {
-		BeanInfo beanInfo = getBeanInfo(this.getClass());
+		BeanInfo beanInfo = BeanUtil.getBeanInfo(this.getClass());
 		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 		
 		int propertyLength = propertyDescriptors.length;
@@ -63,7 +49,7 @@ public class BaseBo {
 	 * 把对象转换为json
 	 * */
 	public JSONObject toJson() throws Exception {
-		BeanInfo beanInfo = getBeanInfo(this.getClass());
+		BeanInfo beanInfo = BeanUtil.getBeanInfo(this.getClass());
 		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 		
 		int propertyLength = propertyDescriptors.length;
@@ -89,5 +75,12 @@ public class BaseBo {
 			json.put(propertyName, readMethod.invoke(this, methodParams));
 		}
 		return json;
+	}
+	
+	/**
+	 * 获取对象的json字符串
+	 * */
+	public String toJSONString(){
+		return JSON.toJSONString(this);
 	}
 }

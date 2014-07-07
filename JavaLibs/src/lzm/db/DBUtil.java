@@ -1,18 +1,16 @@
 package lzm.db;
 
 import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import lzm.db.config.DBConfig;
 import lzm.db.config.PoolConfig;
+import lzm.utils.BeanUtil;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
@@ -168,8 +166,7 @@ public class DBUtil {
 	 * @param	clazz	对应的bean类
 	 * @param	where	查询条件
 	 * */
-	@SuppressWarnings("rawtypes")
-	public static String selectSql_MySql(String table,Class clazz,Map<String, Object> where) throws Exception{
+	public static String selectSql_MySql(String table,Class<?> clazz,Map<String, Object> where) throws Exception{
 		table.trim();
 		
 		secureData(where);
@@ -177,7 +174,7 @@ public class DBUtil {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 		
-		BeanInfo beanInfo = getBeanInfo(clazz);
+		BeanInfo beanInfo = BeanUtil.getBeanInfo(clazz);
 		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 		PropertyDescriptor propertyDescriptor;
 		
@@ -225,7 +222,7 @@ public class DBUtil {
 		query.append(table);
 		query.append("` SET ");
 		
-		BeanInfo beanInfo = getBeanInfo(data.getClass());
+		BeanInfo beanInfo = BeanUtil.getBeanInfo(data.getClass());
 		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 		
 		int propertyLength = propertyDescriptors.length;
@@ -355,20 +352,6 @@ public class DBUtil {
 	public static String TransactSQLInjection(String str){
           return str.replaceAll(".*([';]+|(--)+).*", "");
     }
-	
-	
-	//缓存beaninfo
-	@SuppressWarnings("rawtypes")
-	private static Map<Class, BeanInfo> beanInfoCache = new HashMap<Class, BeanInfo>(); 
-	private static BeanInfo getBeanInfo(@SuppressWarnings("rawtypes") Class clazz) throws IntrospectionException{
-		BeanInfo beanInfo = beanInfoCache.get(clazz);
-		if(beanInfo == null){
-			beanInfo = Introspector.getBeanInfo(clazz);
-			beanInfoCache.put(clazz, beanInfo);
-		}
-		return beanInfo;
-	}
-	
 	
 
 }
