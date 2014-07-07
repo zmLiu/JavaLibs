@@ -13,8 +13,11 @@ import lzm.db.config.PoolConfig;
 import lzm.utils.BeanUtil;
 
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.MapHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.apache.commons.pool.impl.GenericObjectPool;
@@ -52,31 +55,61 @@ public class DBUtil {
 		this.connPool = connPool;
 	}
 	//查
-	@SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
-	public List<Object> queryClass(String sql, Object[] params, Class clazz)throws Exception {
+	@SuppressWarnings("deprecation")
+	public <T> List<T> queryClass(String sql, Class<T> clazz)throws Exception {
 		Connection conn = connPool.borrowObject();
 		try{
-			List<Object> list = new QueryRunner().query(conn, sql, params, new BeanListHandler<Object>(clazz));
+			List<T> list = new QueryRunner().query(conn, sql, null, new BeanListHandler<T>(clazz));
 			return list;
 		}finally{
 			connPool.returnObject(conn);
 		}
 	}
 	//查
-	@SuppressWarnings({ "rawtypes", "deprecation", "unchecked" })
-	public Object queryOneClass(String sql, Object[] params, Class clazz)throws Exception {
+	@SuppressWarnings("deprecation")
+	public <T> List<T> queryClass(String sql, Object[] params, Class<T> clazz)throws Exception {
 		Connection conn = connPool.borrowObject();
 		try{
-			List<Object> list = new QueryRunner().query(conn, sql, params, new BeanListHandler<Object>(clazz));
-			if(list.size() > 0){
-				return list.get(0);
-			}
-			return null;
+			List<T> list = new QueryRunner().query(conn, sql, params, new BeanListHandler<T>(clazz));
+			return list;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
+	//查
+	@SuppressWarnings("deprecation")
+	public <T> T queryOneClass(String sql, Class<T> clazz)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			T data = new QueryRunner().query(conn, sql, null, new BeanHandler<T>(clazz));
+			return data;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
+	//查
+	@SuppressWarnings("deprecation")
+	public <T> T queryOneClass(String sql, Object[] params, Class<T> clazz)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			T data = new QueryRunner().query(conn, sql, params, new BeanHandler<T>(clazz));
+			return data;
 		}finally{
 			connPool.returnObject(conn);
 		}
 	}
 	
+	//查
+	@SuppressWarnings("deprecation")
+	public List<Object[]> queryList(String sql)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			List<Object[]> list = new QueryRunner().query(conn, sql, null, new ArrayListHandler());
+			return list;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
 	//查
 	@SuppressWarnings("deprecation")
 	public List<Object[]> queryList(String sql, Object[] params)throws Exception {
@@ -89,6 +122,17 @@ public class DBUtil {
 		}
 	}
 	
+	//查
+	@SuppressWarnings("deprecation")
+	public Object[] queryOneList(String sql)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			Object[] data = new QueryRunner().query(conn, sql, null, new ArrayHandler());
+			return data;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
 	//查
 	@SuppressWarnings("deprecation")
 	public Object[] queryOneList(String sql, Object[] params)throws Exception {
@@ -106,11 +150,44 @@ public class DBUtil {
 	
 	//查
 	@SuppressWarnings("deprecation")
+	public List<Map<String, Object>> queryListMap(String sql)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			List<Map<String, Object>> list = new QueryRunner().query(conn, sql, null, new MapListHandler());
+			return list;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
+	//查
+	@SuppressWarnings("deprecation")
 	public List<Map<String, Object>> queryListMap(String sql, Object[] params)throws Exception {
 		Connection conn = connPool.borrowObject();
 		try{
 			List<Map<String, Object>> list = new QueryRunner().query(conn, sql, params, new MapListHandler());
 			return list;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
+	//查
+	@SuppressWarnings("deprecation")
+	public Map<String, Object> queryOneMap(String sql)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			Map<String, Object> map = new QueryRunner().query(conn, sql, null, new MapHandler());
+			return map;
+		}finally{
+			connPool.returnObject(conn);
+		}
+	}
+	//查
+	@SuppressWarnings("deprecation")
+	public Map<String, Object> queryOneMap(String sql, Object[] params)throws Exception {
+		Connection conn = connPool.borrowObject();
+		try{
+			Map<String, Object> map = new QueryRunner().query(conn, sql, params, new MapHandler());
+			return map;
 		}finally{
 			connPool.returnObject(conn);
 		}
@@ -339,6 +416,7 @@ public class DBUtil {
 	
 	/** 防止sql注入 */
 	private static void secureData(Map<String, Object> data){
+		if(data == null) return;
 		String key;
 		Object value;
 		for (Iterator<String> iterator = data.keySet().iterator(); iterator.hasNext();) {
