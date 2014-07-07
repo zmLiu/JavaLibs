@@ -15,15 +15,14 @@ public class SocketServer {
 	public void run() throws Exception {
 		//CommandExecuteThread.initExecuteCommandThread(SocketServerConfig.executeCommandThreads);
 
-		ServerBootstrap b = new ServerBootstrap();
 		EventLoopGroup bossGroup = new NioEventLoopGroup(SocketServerConfig.bossGroupThreads);
 		EventLoopGroup workerGroup = new NioEventLoopGroup(SocketServerConfig.workerGroupThreads);
 		try {
-			b.option(ChannelOption.TCP_NODELAY, true).childOption(ChannelOption.TCP_NODELAY, true);
-
+			ServerBootstrap b = new ServerBootstrap();
 			b.group(bossGroup, workerGroup)
 				.channel(NioServerSocketChannel.class)
-				.childOption(ChannelOption.TCP_NODELAY, false)
+				.option(ChannelOption.TCP_NODELAY, true)
+				.option(ChannelOption.SO_TIMEOUT, SocketServerConfig.timeOut)
 				.childHandler(new SocketChannelInitializer());
 			
 			if(SocketServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));

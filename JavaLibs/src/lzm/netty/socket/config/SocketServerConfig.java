@@ -14,4 +14,6 @@ public class SocketServerConfig {
 	
 	public static boolean log = false;//是否输出log信息
 	
+	public static int timeOut = 30;//socket超时时间
+	
 }
