@@ -9,6 +9,7 @@ package lzm.netty.socket
 
 	public class NettySocket extends Socket
 	{
+		private var _crossdomainLength:int = 89;//策略文件的长度
 		private var _readLength:int = 2;//当前需要读取数据的长度
 		private var _readStringLength:Boolean = true;//是否读取消息体长度
 		private var _firstMessage:Boolean = true;//是否为第一次接受到消息
@@ -54,10 +55,10 @@ package lzm.netty.socket
 		 * */
 		private function receivedHandler(e:ProgressEvent):void{
 			if(_firstMessage){//第一次收到的是策略策略文件
-				readBytes(new ByteArray(),0,bytesAvailable);
+				if(bytesAvailable < _crossdomainLength) return;
+				readBytes(new ByteArray(),0,_crossdomainLength);
 				_firstMessage = false;
 				dispatchEvent(new SocketEvent(SocketEvent.CONNECT));//收到策略文件才算连接成功
-				return;
 			}
 			
 			while(bytesAvailable >= _readLength){//需要有足够的可读字节
