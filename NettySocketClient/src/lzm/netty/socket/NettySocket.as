@@ -14,9 +14,11 @@ package lzm.netty.socket
 		private var _readStringLength:Boolean = true;//是否读取消息体长度
 		private var _firstMessage:Boolean = true;//是否为第一次接受到消息
 		
-		public function NettySocket()
-		{
-			addListeners();
+		public override function connect(host:String, port:int):void{
+			if(!connected){
+				super.connect(host,port);
+				addListeners();
+			}
 		}
 		
 		private function addListeners():void{
@@ -47,6 +49,12 @@ package lzm.netty.socket
 		 * 连接关闭
 		 * */
 		private function closeHanler(e:Event):void{
+			removeListeners();
+			
+			_readLength = 2;
+			_readStringLength = true;
+			_firstMessage = true;
+			
 			dispatchEvent(new SocketEvent(SocketEvent.CLOSE));
 		}
 		

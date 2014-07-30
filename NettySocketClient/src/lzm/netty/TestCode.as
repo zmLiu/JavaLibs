@@ -1,6 +1,8 @@
 package lzm.netty
 {
 	import flash.utils.setTimeout;
+	
+	import lzm.netty.socket.SocketEvent;
 
 	public class TestCode
 	{
@@ -10,15 +12,15 @@ package lzm.netty
 			socketClient.registerCommand("test",function(json:Object):void{
 				trace(JSON.stringify(json));
 			});
-			socketClient.onConnectFun = function():void{
+			socketClient.addEventListener(SocketEvent.CONNECT,function(e:SocketEvent):void{
 				trace("链接成功");
 				setTimeout(function():void{
 					socketClient.sendMessages("test",{"c":"test"});
 				},1000);
-			}
-			socketClient.onCloseFun = function():void{
+			});
+			socketClient.addEventListener(SocketEvent.CLOSE,function(e:SocketEvent):void{
 				trace("链接关闭");
-			}
+			});
 			socketClient.connect();
 		}
 	}

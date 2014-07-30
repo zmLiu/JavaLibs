@@ -1,12 +1,18 @@
 package lzm.netty
 {
+	import flash.events.EventDispatcher;
 	import flash.utils.ByteArray;
 	
 	import lzm.netty.socket.NettySocket;
 	import lzm.netty.socket.SocketEvent;
 	
+	[Event(name="NettySocket_Connect",type="lzm.netty.socket.SocketEvent")]
+	[Event(name="NettySocket_Close",type="lzm.netty.socket.SocketEvent")]
+	[Event(name="NettySocket_Data",type="lzm.netty.socket.SocketEvent")]
+	[Event(name="NettySocket_Security_Error",type="lzm.netty.socket.SocketEvent")]
+	[Event(name="NettySocket_IO_Error",type="lzm.netty.socket.SocketEvent")]
 
-	public class BaseNettyClient
+	public class BaseNettyClient extends EventDispatcher
 	{
 		
 		protected var _host:String;
@@ -17,9 +23,6 @@ package lzm.netty
 		
 		protected var _commands:Object;
 		
-		public var onConnectFun:Function;//连接成功的回掉方法
-		public var onCloseFun:Function;//连接关闭的回掉方法
-		
 		public function BaseNettyClient(host:String,port:int){
 			_host = host;
 			_port = port;
@@ -29,7 +32,14 @@ package lzm.netty
 		
 		public function connect():void{
 			_socket.connect(_host,_port);
-			
+			addEventListeners();
+		}
+		
+		public function close():void{
+			_socket.close();
+		}
+		
+		protected function addEventListeners():void{
 			_socket.addEventListener(SocketEvent.CONNECT,onConnect);
 			_socket.addEventListener(SocketEvent.CLOSE,onClose);
 			_socket.addEventListener(SocketEvent.DATA,onData);
@@ -37,12 +47,20 @@ package lzm.netty
 			_socket.addEventListener(SocketEvent.IO_ERROR,onIOError);
 		}
 		
+		protected function removeEventListeners():void{
+			_socket.removeEventListener(SocketEvent.CONNECT,onConnect);
+			_socket.removeEventListener(SocketEvent.CLOSE,onClose);
+			_socket.removeEventListener(SocketEvent.DATA,onData);
+			_socket.removeEventListener(SocketEvent.SECURITY_ERROR,onSecurityError);
+			_socket.removeEventListener(SocketEvent.IO_ERROR,onIOError);
+		}
+		
 		/**
 		 * 连接成功
 		 * */
 		protected function onConnect(e:SocketEvent):void{
 			_isConnect = true;
-			if(onConnectFun) onConnectFun();
+			dispatchEvent(new SocketEvent(SocketEvent.CONNECT));
 		}
 		
 		/**
@@ -50,14 +68,8 @@ package lzm.netty
 		 * */
 		protected function onClose(e:SocketEvent):void{
 			_isConnect = false;
-			
-			_socket.removeEventListener(SocketEvent.CONNECT,onConnect);
-			_socket.removeEventListener(SocketEvent.CLOSE,onClose);
-			_socket.removeEventListener(SocketEvent.DATA,onData);
-			_socket.removeEventListener(SocketEvent.SECURITY_ERROR,onSecurityError);
-			_socket.removeEventListener(SocketEvent.IO_ERROR,onIOError);
-			
-			if(onCloseFun) onCloseFun();
+			removeEventListeners();
+			dispatchEvent(new SocketEvent(SocketEvent.CLOSE));
 		}
 		
 		/**
@@ -90,12 +102,18 @@ package lzm.netty
 		/**
 		 * 沙箱错误
 		 * */
-		protected function onSecurityError(e:SocketEvent):void{}
+		protected function onSecurityError(e:SocketEvent):void{
+			removeEventListeners();
+			dispatchEvent(new SocketEvent(SocketEvent.SECURITY_ERROR));
+		}
 		
 		/**
 		 * io错误
 		 * */
-		protected function onIOError(e:SocketEvent):void{}
+		protected function onIOError(e:SocketEvent):void{
+			removeEventListeners();
+			dispatchEvent(new SocketEvent(SocketEvent.IO_ERROR));
+		}
 		
 		
 		/**
