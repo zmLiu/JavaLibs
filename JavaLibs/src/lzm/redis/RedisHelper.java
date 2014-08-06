@@ -1,5 +1,7 @@
 package lzm.redis;
 
+import java.util.Set;
+
 import lzm.redis.config.RedisConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -79,6 +81,16 @@ public class RedisHelper {
 		Jedis jedis = getJedis();
 		jedis.hset(key, field, fieldValue);
 		returnJedis(jedis);
+	}
+	
+	/**
+	 * 获取一个hashMap的key集合
+	 * */
+	public Set<String> hashKeys(String key){
+		Jedis jedis = getJedis();
+		Set<String> keys = jedis.hkeys(key);
+		returnJedis(jedis);
+		return keys;
 	}
 	
 	/**
