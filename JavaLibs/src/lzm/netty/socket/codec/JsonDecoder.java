@@ -1,4 +1,4 @@
-package lzm.netty.socket.decoder;
+package lzm.netty.socket.codec;
 
 import lzm.utils.LogError;
 import io.netty.buffer.ByteBuf;

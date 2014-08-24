@@ -1,4 +1,4 @@
-package lzm.netty.socket.decoder;
+package lzm.netty.socket.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

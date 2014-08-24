@@ -5,9 +5,9 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import lzm.netty.socket.codec.JsonDecoder;
+import lzm.netty.socket.codec.JsonEncoder;
 import lzm.netty.socket.config.SocketServerConfig;
-import lzm.netty.socket.decoder.JsonDecoder;
-import lzm.netty.socket.decoder.JsonEncoder;
 import lzm.netty.socket.handler.SocketServerHandler;
 
 public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> {
