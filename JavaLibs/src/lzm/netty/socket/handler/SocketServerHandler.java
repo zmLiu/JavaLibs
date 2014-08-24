@@ -1,10 +1,9 @@
 package lzm.netty.socket.handler;
 
-import lzm.netty.socket.command.CommandManager;
-import lzm.netty.socket.command.ICommand;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.ReferenceCountUtil;
+import lzm.netty.socket.command.CommandManager;
+import lzm.netty.socket.command.ICommand;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -29,15 +28,11 @@ public class SocketServerHandler extends SimpleChannelInboundHandler<Object> {
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, Object msgs)throws Exception {
-		try {
-			JSONObject jsonObject = (JSONObject) msgs;
-			String cmd = jsonObject.getString("cmd");
-			ICommand command = CommandManager.getCommand(cmd);
-			if(command != null){
-				CommandManager.executeCmd(command, ctx, msgs);
-			}
-		} finally {
-			ReferenceCountUtil.release(msgs);
+		JSONObject jsonObject = (JSONObject) msgs;
+		String cmd = jsonObject.getString("cmd");
+		ICommand command = CommandManager.getCommand(cmd);
+		if(command != null){
+			CommandManager.executeCmd(command, ctx, msgs);
 		}
 	}
 	
