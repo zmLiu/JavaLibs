@@ -39,7 +39,10 @@ public class LogicExecutorThread extends Thread {
 				}
 				iLogic = logics.poll();
 				logicCount = logics.size();
-				if(iLogic != null) iLogic.execute();
+				if(iLogic != null) {
+					iLogic.execute();
+					iLogic = null;
+				}
 			} catch (Exception e) {
 				LogError.throwable(e.getCause());
 			}
