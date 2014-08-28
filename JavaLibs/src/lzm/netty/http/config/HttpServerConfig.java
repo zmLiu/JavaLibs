@@ -32,4 +32,6 @@ public class HttpServerConfig {
 	public static String index_file = "index.html";//默认页
 	
 	public static boolean log = false;//是否输出log信息
+	
+	public static int logic_execute_thread = 0;
 }

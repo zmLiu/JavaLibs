@@ -20,8 +20,6 @@ import lzm.netty.http.handler.HttpServerHandler;
 
 public abstract class AbstractHttpService implements IHttpService {
 	
-	/** 是哪一个handler受理的请求 */
-	protected HttpServerHandler httpServerHandler;
 	/** 用户链接 */
 	protected ChannelHandlerContext ctx;
 	/** request对象 */
@@ -42,7 +40,7 @@ public abstract class AbstractHttpService implements IHttpService {
 	 * @param	request
 	 * @throws	IOException 
 	 * */
-	public void decoderRequest(HttpServerHandler httpServerHandler,ChannelHandlerContext ctx,FullHttpRequest httpRequest,QueryStringDecoder queryStringDecoder) throws IOException{
+	public void decoderRequest(ChannelHandlerContext ctx,FullHttpRequest httpRequest,QueryStringDecoder queryStringDecoder) throws IOException{
 		this.ctx = ctx;
 		this.httpRequest = httpRequest;
 		

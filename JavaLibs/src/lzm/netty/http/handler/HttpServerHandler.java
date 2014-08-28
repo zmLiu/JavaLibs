@@ -22,6 +22,8 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.CharsetUtil;
 import lzm.netty.http.config.HttpServerConfig;
+import lzm.netty.http.logic.HttpLogicExecutor;
+import lzm.netty.http.logic.HttpLogicManager;
 import lzm.netty.http.service.AbstractHttpService;
 import lzm.netty.http.service.HttpServiceManager;
 import lzm.netty.http.service.StaticFileService;
@@ -33,7 +35,13 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	private AbstractHttpService httpService;
 	
 	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request)throws Exception {
+	protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+		//放入逻辑执行线程
+		HttpLogicManager.execute(new HttpLogicExecutor(this, ctx, request));
+	}
+	
+	//执行逻辑
+	public void execute(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
 		if (is100ContinueExpected(request)) {
             send100Continue(ctx);
         }
@@ -43,7 +51,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		if(httpService == null){
 			httpService = new StaticFileService();
 		}
-		httpService.decoderRequest(this, ctx, request, queryStringDecoder);
+		httpService.decoderRequest(ctx, request, queryStringDecoder);
 		if(httpService.filter()) httpService.index();
 	}
 	

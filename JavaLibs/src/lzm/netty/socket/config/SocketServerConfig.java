@@ -16,4 +16,6 @@ public class SocketServerConfig {
 	
 	public static int timeOut = 30;//socket超时时间
 	
+	public static int logic_execute_thread = 0;
+	
 }

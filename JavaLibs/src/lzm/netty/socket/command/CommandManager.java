@@ -5,7 +5,14 @@ import io.netty.channel.ChannelHandlerContext;
 import java.util.HashMap;
 import java.util.List;
 
+import lzm.executor.logic.LogicExecutorSystem;
+import lzm.netty.socket.config.SocketServerConfig;
+
 public class CommandManager {
+	
+	//逻辑执行系统
+	private static LogicExecutorSystem executorSystem;
+	
 	// 所有命令
 	private static HashMap<String, ICommand> commands = new HashMap<String, ICommand>();
 
@@ -62,9 +69,11 @@ public class CommandManager {
 	}
 	
 	//添加需要执行的命令
-	public static void executeCmd(ICommand command,ChannelHandlerContext ctx,Object msgs) throws Exception{
-		command.execute(ctx, msgs);
-		//CommandExecuteThread.addTask(command, ctx, msgs);
+	public static void executeCmd(CommandLogicExecutor executor) throws Exception{
+		if(executorSystem == null){
+			executorSystem = new LogicExecutorSystem(SocketServerConfig.logic_execute_thread);
+		}
+		executorSystem.addLogic(executor);
 	}
 	
 }
