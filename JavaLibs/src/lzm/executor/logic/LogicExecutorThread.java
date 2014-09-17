@@ -44,7 +44,7 @@ public class LogicExecutorThread extends Thread {
 					iLogic = null;
 				}
 			} catch (Exception e) {
-				LogError.throwable(e.getCause());
+				LogError.error(e);
 			}
 		}
 	}

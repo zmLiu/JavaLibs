@@ -6,8 +6,6 @@ public class SocketServerConfig {
 	
 	public static int idleTimeSeconds = 60;//连接空闲时间
 	
-	public static int executeCommandThreads = 2;//执行命令的线程数
-	
 	public static int bossGroupThreads = 0;//bossGroup的线程数
 	
 	public static int workerGroupThreads = 0;//workerGroup的线程数
@@ -16,6 +14,6 @@ public class SocketServerConfig {
 	
 	public static int timeOut = 30;//socket超时时间
 	
-	public static int logic_execute_thread = 0;
+	public static int logic_execute_thread = 0;//执行命令的线程数
 	
 }
