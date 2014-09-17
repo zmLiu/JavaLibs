@@ -25,9 +25,9 @@ public class HttpServerConfig {
 	
 	public static int time_out = 30;
 	
-	public static boolean send_file = true;//是否可以请求文件
+	public static boolean send_file = false;//是否可以请求文件
 	
-	public static boolean send_file_list = true;//是否可以请求文件列表
+	public static boolean send_file_list = false;//是否可以请求文件列表
 	
 	public static String index_file = "index.html";//默认页
 	
