@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="libs/jedis.jar"/>
 	<classpathentry kind="lib" path="libs/asyncHttpClient-netty-1.8.9.jar"/>
 	<classpathentry kind="lib" path="libs/netty-all-4.0.21.Final.jar"/>
+	<classpathentry kind="lib" path="libs/disruptor-3.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

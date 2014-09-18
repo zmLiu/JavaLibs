@@ -14,6 +14,6 @@ public class SocketServerConfig {
 	
 	public static int timeOut = 30;//socket超时时间
 	
-	public static int logic_execute_thread = 0;//执行命令的线程数
+	public static int disruptor_buff_size = 4096;
 	
 }

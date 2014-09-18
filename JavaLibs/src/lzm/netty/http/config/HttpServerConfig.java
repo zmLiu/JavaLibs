@@ -33,5 +33,5 @@ public class HttpServerConfig {
 	
 	public static boolean log = false;//是否输出log信息
 	
-	public static int logic_execute_thread = 0;
+	public static int disruptor_buff_size = 4096;
 }

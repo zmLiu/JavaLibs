@@ -22,8 +22,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.CharsetUtil;
 import lzm.netty.http.config.HttpServerConfig;
-import lzm.netty.http.logic.HttpLogicExecutor;
-import lzm.netty.http.logic.HttpLogicManager;
+import lzm.netty.http.disruptor.ServiceEventProducer;
 import lzm.netty.http.service.AbstractHttpService;
 import lzm.netty.http.service.HttpServiceManager;
 import lzm.netty.http.service.StaticFileService;
@@ -36,8 +35,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
-		//放入逻辑执行线程
-		HttpLogicManager.execute(new HttpLogicExecutor(this, ctx, request));
+		//放入逻辑执行队列
+		ServiceEventProducer.execute(this, ctx, request);
 	}
 	
 	//执行逻辑
