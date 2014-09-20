@@ -2,6 +2,7 @@ package lzm.netty.socket.disruptor;
 
 import io.netty.channel.ChannelHandlerContext;
 import lzm.netty.socket.command.ICommand;
+import lzm.utils.LogError;
 
 public class CommandEvent {
 	
@@ -10,7 +11,11 @@ public class CommandEvent {
 	private Object msgs;
 	
 	public void execute() throws Exception {
-		command.execute(ctx, msgs);
+		try {
+			command.execute(ctx, msgs);
+		} catch (Exception e) {
+			LogError.error(e);
+		}
 	}
 	
 	public ICommand getCommand() {

@@ -3,6 +3,7 @@ package lzm.netty.http.disruptor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import lzm.netty.http.handler.HttpServerHandler;
+import lzm.utils.LogError;
 
 public class ServiceEvent {
 	private FullHttpRequest request;
@@ -10,8 +11,12 @@ public class ServiceEvent {
 	private HttpServerHandler httpServerHandler;
 	
 	
-	public void execute() throws Exception {
-		httpServerHandler.execute(ctx, request);
+	public void execute() {
+		try {
+			httpServerHandler.execute(ctx, request);
+		} catch (Exception e) {
+			LogError.error(e);
+		}
 	}
 	
 	public FullHttpRequest getRequest() {
