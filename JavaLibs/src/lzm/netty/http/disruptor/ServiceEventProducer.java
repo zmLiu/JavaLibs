@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 
 import lzm.netty.http.config.HttpServerConfig;
 import lzm.netty.http.handler.HttpServerHandler;
-import lzm.utils.LogError;
 
 import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.RingBuffer;
@@ -29,9 +28,7 @@ public class ServiceEventProducer {
 			event.setCtx(ctx);
 			event.setHttpServerHandler(httpServerHandler);
 			event.setRequest(request);
-		} catch (Exception e) {
-			LogError.error(e);
-		}finally{
+		} finally{
 			ringBuffer.publish(sequence);
 		}
 	}

@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 
 import lzm.netty.socket.command.ICommand;
 import lzm.netty.socket.config.SocketServerConfig;
-import lzm.utils.LogError;
 
 import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.RingBuffer;
@@ -29,9 +28,7 @@ public class CommandEventProducer {
 			event.setCommand(command);
 			event.setCtx(ctx);
 			event.setMsgs(msgs);
-		} catch (Exception e) {
-			LogError.error(e);
-		}finally{
+		} finally{
 			ringBuffer.publish(sequence);
 		}
 	}
