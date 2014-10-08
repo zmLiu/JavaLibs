@@ -11,6 +11,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
 import static io.netty.handler.codec.http.HttpResponseStatus.FOUND;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -87,25 +88,24 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
             response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         }
 		
-		ctx.writeAndFlush(response);
+		ChannelFuture lastContentFuture = ctx.writeAndFlush(response);
+		if(!keepAlive){
+			//发送完毕之后 关闭链接
+			lastContentFuture.addListener(ChannelFutureListener.CLOSE);
+		}
 	}
 	
 	/** 重定向 */
 	public static void sendRedirect(ChannelHandlerContext ctx, String newUri) {
         FullHttpResponse response = new DefaultFullHttpResponse(HttpServerConfig.http_version, FOUND);
         response.headers().set(LOCATION, newUri);
-
-        // Close the connection as soon as the error message is sent.
         ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
 	
 	/** 向客户端发送错误代码 */
 	public static void sendError(ChannelHandlerContext ctx,HttpResponseStatus status){
-		
 		FullHttpResponse response = new DefaultFullHttpResponse(HttpServerConfig.http_version, status, Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8));
-		
 		response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
-
         ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
 	}
 

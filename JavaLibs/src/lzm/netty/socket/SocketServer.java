@@ -6,15 +6,11 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 import lzm.netty.socket.config.SocketServerConfig;
 
 public class SocketServer {
 	
 	public void run() throws Exception {
-		//CommandExecuteThread.initExecuteCommandThread(SocketServerConfig.executeCommandThreads);
-
 		EventLoopGroup bossGroup = new NioEventLoopGroup(SocketServerConfig.bossGroupThreads);
 		EventLoopGroup workerGroup = new NioEventLoopGroup(SocketServerConfig.workerGroupThreads);
 		try {
@@ -24,8 +20,6 @@ public class SocketServer {
 				.option(ChannelOption.TCP_NODELAY, true)
 				.option(ChannelOption.SO_TIMEOUT, SocketServerConfig.timeOut)
 				.childHandler(new SocketChannelInitializer());
-			
-			if(SocketServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));
 
 			ChannelFuture f = b.bind(SocketServerConfig.port).sync();
 			f.channel().closeFuture().sync();
