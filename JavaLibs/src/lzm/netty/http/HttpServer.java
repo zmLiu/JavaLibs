@@ -6,6 +6,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import lzm.netty.http.config.HttpServerConfig;
 import lzm.netty.http.service.HttpServiceManager;
 import lzm.netty.http.test.TestService;
@@ -22,6 +24,8 @@ public class HttpServer {
              .option(ChannelOption.TCP_NODELAY, true)
              .option(ChannelOption.SO_TIMEOUT, HttpServerConfig.time_out)
              .childHandler(new HttpServerInitializer());
+            
+            if(HttpServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));
 
             Channel ch = b.bind(HttpServerConfig.port).sync().channel();
             ch.closeFuture().sync();
