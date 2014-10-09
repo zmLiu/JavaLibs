@@ -5,7 +5,7 @@ public class PoolConfig {
 	public boolean lifo = true;
 
 	/** 最大对象数 */
-	public int maxActive = 24;
+	public int maxActive = 64;
 
 	/** 最大空闲对象 */
 	public int maxIdle = 6;

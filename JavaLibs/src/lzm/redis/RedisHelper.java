@@ -26,6 +26,7 @@ public class RedisHelper {
 	public Jedis getJedis(){
 		if(pool == null){
 			JedisPoolConfig poolConfig = new JedisPoolConfig();
+			poolConfig.maxActive = 64;
 			pool = new JedisPool(poolConfig, host, port);
 		}
 		
