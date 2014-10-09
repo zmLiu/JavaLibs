@@ -5,6 +5,9 @@ import io.netty.handler.codec.http.HttpVersion;
 import java.util.Locale;
 
 public class HttpServerConfig {
+	
+	public static String host = "*";//访问地址
+	
 	public static int port = 80;// 服务器监听端口
 
 	public static int bossGroupThreads = 0;// bossGroup的线程数

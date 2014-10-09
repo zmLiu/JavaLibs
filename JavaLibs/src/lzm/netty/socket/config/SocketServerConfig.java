@@ -2,6 +2,8 @@ package lzm.netty.socket.config;
 
 public class SocketServerConfig {
 	
+	public static String host = "*";//访问地址
+	
 	public static int port = 8888;//服务器监听端口
 	
 	public static int idleTimeSeconds = 60;//连接空闲时间

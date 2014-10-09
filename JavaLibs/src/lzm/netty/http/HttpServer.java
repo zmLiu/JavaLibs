@@ -1,7 +1,7 @@
 package lzm.netty.http;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -26,9 +26,14 @@ public class HttpServer {
              .childHandler(new HttpServerInitializer());
             
             if(HttpServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));
-
-            Channel ch = b.bind(HttpServerConfig.port).sync().channel();
-            ch.closeFuture().sync();
+            
+            ChannelFuture f;
+            if(HttpServerConfig.host.equals("*")){
+            	f = b.bind(HttpServerConfig.port).sync();
+            }else{
+            	f = b.bind(HttpServerConfig.host,HttpServerConfig.port).sync();
+            }
+            f.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

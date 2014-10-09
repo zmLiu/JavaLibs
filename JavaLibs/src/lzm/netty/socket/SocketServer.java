@@ -25,7 +25,12 @@ public class SocketServer {
 			
 			if(SocketServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));
 
-			ChannelFuture f = b.bind(SocketServerConfig.port).sync();
+			ChannelFuture f;
+			if(SocketServerConfig.host.equals("*")){
+				f = b.bind(SocketServerConfig.port).sync();
+			}else{
+				f = b.bind(SocketServerConfig.host,SocketServerConfig.port).sync();
+			}
 			f.channel().closeFuture().sync();
 		} finally {
 			bossGroup.shutdownGracefully();
