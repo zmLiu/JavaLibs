@@ -23,14 +23,21 @@ public class BytesDecoder extends ByteToMessageDecoder {
 	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,List<Object> out) throws Exception {
-		
-		while(in.readableBytes() >= readLength){//需要有足够的可读字节
+		if(in.readableBytes() >= readLength){//需要有足够的可读字节
 			//读取消息体长度
 			if(readStringLength) readLength = in.readShort();
 			
+			//需要读取的消息长度小于0，表示非法
+			if(readLength <= 0){
+				ctx.close();
+				throw new Exception("message length error!");
+			}
+			
 			//读取消息体
 			if(in.readableBytes() >= readLength){
-				out.add(decode(in.readBytes(readLength)));
+				byte[] bytes = new byte[readLength];
+				in.readBytes(bytes);
+				out.add(decode(bytes));
 				readLength = 2;
 				readStringLength = true;
 			}else{
@@ -38,7 +45,6 @@ public class BytesDecoder extends ByteToMessageDecoder {
 				readStringLength = false;
 			}
 		}
-		
 	}
 	
 	@Override
@@ -46,7 +52,7 @@ public class BytesDecoder extends ByteToMessageDecoder {
 		ctx.close();
 	}
 	
-	protected Object decode(ByteBuf in){
+	protected Object decode(byte[] bytes){
 		
 		return null;
 	}
