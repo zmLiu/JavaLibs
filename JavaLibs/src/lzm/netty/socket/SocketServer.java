@@ -21,7 +21,8 @@ public class SocketServer {
 				.channel(NioServerSocketChannel.class)
 				.option(ChannelOption.TCP_NODELAY, true)
 				.option(ChannelOption.SO_TIMEOUT, SocketServerConfig.timeOut)
-				.childHandler(new SocketChannelInitializer());
+				.childHandler(new SocketChannelInitializer())
+				.childOption(ChannelOption.SO_KEEPALIVE, true);
 			
 			if(SocketServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));
 

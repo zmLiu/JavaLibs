@@ -23,7 +23,8 @@ public class HttpServer {
              .channel(NioServerSocketChannel.class)
              .option(ChannelOption.TCP_NODELAY, true)
              .option(ChannelOption.SO_TIMEOUT, HttpServerConfig.time_out)
-             .childHandler(new HttpServerInitializer());
+             .childHandler(new HttpServerInitializer())
+             .childOption(ChannelOption.SO_KEEPALIVE, true);
             
             if(HttpServerConfig.log) b.handler(new LoggingHandler(LogLevel.INFO));
             
