@@ -2,9 +2,9 @@ package lzm.utils;
 
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,11 +39,11 @@ public class WordFilter {
     	if(isInit) return;
     	isInit = true;
     	
-    	File file = new File(filePath);
+//    	File file = new File(filePath);
 		BufferedReader reader = null;
 		List<String> wordList = new ArrayList<String>();
 		try {
-			reader = new BufferedReader(new FileReader(file));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),"utf-8"));//new BufferedReader(new FileReader(file));
 			String tempString = null;
 			while ((tempString = reader.readLine()) != null){
 				String []str = tempString.split("    ");
