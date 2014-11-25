@@ -48,11 +48,12 @@ public class RedisHelper {
 	 * */
 	public void set(String key, String value, int seconds){
 		Jedis jedis = getJedis();
-		
-		jedis.set(key, value);
-		jedis.expire(key, seconds);
-		
-		returnJedis(jedis);
+		try {
+			jedis.set(key, value);
+			jedis.expire(key, seconds);
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 	
 	/**
@@ -60,9 +61,12 @@ public class RedisHelper {
 	 * */
 	public String get(String key){
 		Jedis jedis = getJedis();
-		String reStr = jedis.get(key);
-		returnJedis(jedis);
-		return reStr;
+		try {
+			String reStr = jedis.get(key);
+			return reStr;
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 	
 	/**
@@ -70,9 +74,12 @@ public class RedisHelper {
 	 * */
 	public String hashGet(String key,String field){
 		Jedis jedis = getJedis();
-		String reStr = jedis.hget(key, field);
-		returnJedis(jedis);
-		return reStr;
+		try {
+			String reStr = jedis.hget(key, field);
+			return reStr;
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 	
 	/**
@@ -80,8 +87,11 @@ public class RedisHelper {
 	 * */
 	public void hashSet(String key,String field,String fieldValue){
 		Jedis jedis = getJedis();
-		jedis.hset(key, field, fieldValue);
-		returnJedis(jedis);
+		try {
+			jedis.hset(key, field, fieldValue);
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 	
 	/**
@@ -89,9 +99,12 @@ public class RedisHelper {
 	 * */
 	public Set<String> hashKeys(String key){
 		Jedis jedis = getJedis();
-		Set<String> keys = jedis.hkeys(key);
-		returnJedis(jedis);
-		return keys;
+		try {
+			Set<String> keys = jedis.hkeys(key);
+			return keys;
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 	
 	/**
@@ -119,8 +132,11 @@ public class RedisHelper {
 	 * */
 	public void delete(String key){
 		Jedis jedis = getJedis();
-		jedis.del(key);
-		returnJedis(jedis);
+		try {
+			jedis.del(key);
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 	
 	/**
@@ -128,8 +144,11 @@ public class RedisHelper {
 	 * */
 	public void lpush(String key,String value){
 		Jedis jedis = getJedis();
-		jedis.lpush(key, value);
-		returnJedis(jedis);
+		try {
+			jedis.lpush(key, value);
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 	
 	/**
@@ -137,9 +156,12 @@ public class RedisHelper {
 	 * */
 	public String rpop(String key){
 		Jedis jedis = getJedis();
-		String reStr = jedis.rpop(key);
-		returnJedis(jedis);
-		return reStr;
+		try {
+			String reStr = jedis.rpop(key);
+			return reStr;
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 	
 	/**
@@ -147,8 +169,11 @@ public class RedisHelper {
 	 * */
 	public void setTimeout(String key,int seconds){
 		Jedis jedis = getJedis();
-		jedis.expire(key, seconds);
-		returnJedis(jedis);
+		try {
+			jedis.expire(key, seconds);
+		} finally{
+			returnJedis(jedis);
+		}
 	}
 
 }
