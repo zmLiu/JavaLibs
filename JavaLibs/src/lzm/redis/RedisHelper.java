@@ -1,5 +1,7 @@
 package lzm.redis;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import lzm.redis.config.RedisConfig;
@@ -41,6 +43,55 @@ public class RedisHelper {
 	}
 	
 	/**
+     * 清空当前选择库
+     * */
+    public void flushDB(){
+    	Jedis jedis = getJedis();
+		try {
+			jedis.flushDB();
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    /**
+     * 清空所有库
+     * */
+    public void flushAll(){
+    	Jedis jedis = getJedis();
+		try {
+			jedis.flushAll();
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    /**
+     * 随机返回key空间的一个key
+     * @return 
+     * */
+    public String randomKey(){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.randomKey();
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+    
+    /**
+     * 判断某个key是否存在
+     * */
+    public boolean exists(String key){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.exists(key);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+    
+	/**
 	 * 存放字符串
 	 * @param key
 	 * @param value
@@ -50,7 +101,7 @@ public class RedisHelper {
 		Jedis jedis = getJedis();
 		try {
 			jedis.set(key, value);
-			jedis.expire(key, seconds);
+			if(seconds > 0) jedis.expire(key, seconds);
 		} finally{
 			returnJedis(jedis);
 		}
@@ -70,13 +121,125 @@ public class RedisHelper {
 	}
 	
 	/**
+	 * list 从左边添加元素
+	 * */
+	public void lpush(String key,String value){
+		Jedis jedis = getJedis();
+		try {
+			jedis.lpush(key, value);
+		} finally{
+			returnJedis(jedis);
+		}
+	}
+	
+	/**
+     * 在list右边头添加元素
+     * */
+    public void rpush(String key,String value){
+    	Jedis jedis = getJedis();
+		try {
+			jedis.rpush(key, value);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+    
+    /**
+     * 在list左边头删除元素，并且返回元素
+     * */
+    public String lpop(String key){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.lpop(key);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+	
+	/**
+	 * list 从右边取值
+	 * */
+	public String rpop(String key){
+		Jedis jedis = getJedis();
+		try {
+			return jedis.rpop(key);
+		} finally{
+			returnJedis(jedis);
+		}
+	}
+	
+	/**
+     * 获取list长度
+     * */
+    public long lsize(String key){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.llen(key);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+    
+    /**
+     *  设置指定位置的值
+     * */
+    public void lset(String key,long index,String value){
+    	Jedis jedis = getJedis();
+		try {
+			jedis.lset(key, index, value);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+    
+    /**
+     * 获取指定位置的值
+     * */
+    public String lindex(String key,long index){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.lindex(key, index);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+    
+    public void ltrim(String key,long start,long end){
+    	Jedis jedis = getJedis();
+		try {
+			jedis.ltrim(key, start, end);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    public long lrem(String key,String value,long count){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.lrem(key, count, value);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    public List<String> lrange(String key,long start,long end){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.lrange(key, start, end);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+    
+    
+	
+	/**
 	 * 从hashmap中取值
 	 * */
 	public String hashGet(String key,String field){
 		Jedis jedis = getJedis();
 		try {
-			String reStr = jedis.hget(key, field);
-			return reStr;
+			return jedis.hget(key, field);
 		} finally{
 			returnJedis(jedis);
 		}
@@ -100,12 +263,74 @@ public class RedisHelper {
 	public Set<String> hashKeys(String key){
 		Jedis jedis = getJedis();
 		try {
-			Set<String> keys = jedis.hkeys(key);
-			return keys;
+			return jedis.hkeys(key);
 		} finally{
 			returnJedis(jedis);
 		}
 	}
+	
+	public long hashLen(String key){
+		Jedis jedis = getJedis();
+		try {
+			return jedis.hlen(key);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    public void hashDel(String key,String ... fields){
+    	Jedis jedis = getJedis();
+		try {
+			jedis.hdel(key, fields);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    public List<String> hashVals(String key){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.hvals(key);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    public Map<String, String> hash_hGetAll(String key){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.hgetAll(key);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    public boolean hash_hExists(String key,String field){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.hexists(key, field);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    public void hashMset(String key,Map<String,String> hash){
+    	Jedis jedis = getJedis();
+		try {
+			jedis.hmset(key, hash);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
+
+    public List<String> hashMGet(String key,String []fields){
+    	Jedis jedis = getJedis();
+		try {
+			return jedis.hmget(key, fields);
+		} finally{
+			returnJedis(jedis);
+		}
+    }
 	
 	/**
 	 * 缓存json对象
@@ -134,31 +359,6 @@ public class RedisHelper {
 		Jedis jedis = getJedis();
 		try {
 			jedis.del(key);
-		} finally{
-			returnJedis(jedis);
-		}
-	}
-	
-	/**
-	 * list 从左边添加元素
-	 * */
-	public void lpush(String key,String value){
-		Jedis jedis = getJedis();
-		try {
-			jedis.lpush(key, value);
-		} finally{
-			returnJedis(jedis);
-		}
-	}
-	
-	/**
-	 * list 从右边取值
-	 * */
-	public String rpop(String key){
-		Jedis jedis = getJedis();
-		try {
-			String reStr = jedis.rpop(key);
-			return reStr;
 		} finally{
 			returnJedis(jedis);
 		}
