@@ -18,11 +18,13 @@ public class RedisHelper {
 	private String host;
 	private int port;
 	private int dbIndex;
+	private String pwd;
 	
 	public RedisHelper(RedisConfig config) {
 		this.host = config.host;
 		this.port = config.port;
 		this.dbIndex = config.dbIndex;
+		this.pwd = config.pwd;
 	}
 	
 	public Jedis getJedis(){
@@ -33,6 +35,9 @@ public class RedisHelper {
 		}
 		
 		Jedis jedis = pool.getResource();
+		if(!pwd.equals("")){
+			jedis.auth(pwd);
+		}
 		jedis.select(dbIndex);
 		
 		return jedis;
@@ -371,6 +376,18 @@ public class RedisHelper {
 		Jedis jedis = getJedis();
 		try {
 			jedis.expire(key, seconds);
+		} finally{
+			returnJedis(jedis);
+		}
+	}
+	
+	/**
+	 * 设置过期时间
+	 * */
+	public Set<String> keys(String pattern){
+		Jedis jedis = getJedis();
+		try {
+			return jedis.keys(pattern);
 		} finally{
 			returnJedis(jedis);
 		}

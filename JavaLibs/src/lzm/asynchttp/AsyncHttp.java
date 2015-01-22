@@ -1,5 +1,6 @@
 package lzm.asynchttp;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -102,6 +103,10 @@ public class AsyncHttp extends Thread {
 			instance.start();
 		}
 		return instance;
+	}
+	
+	public static void executePost(Request request,AsyncHttpCallBack callBack) throws IOException{
+		getInstance().httpClient.executeRequest(request,new ResponseAsyncCompletionHandler(callBack));
 	}
 
 	public static void post(String url,AsyncHttpCallBack callBack) throws Exception{
