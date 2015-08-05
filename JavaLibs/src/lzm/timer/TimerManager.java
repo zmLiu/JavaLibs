@@ -16,6 +16,8 @@ public class TimerManager extends Thread {
 	
 	private static TimerManager instance;
 	
+	private static Calendar now;
+	
 	public static void addTimer(Timer timer,boolean isStart){
 		
 		if(timer.getType() == TIMER_TYPE.Countdown){
@@ -44,7 +46,6 @@ public class TimerManager extends Thread {
 		Iterator<Timer> it = timeingTimerMap.keySet().iterator();
 		Timer timer;
 		
-		Calendar now = Calendar.getInstance();
 		boolean isExecute;
 		int executeTimeInts[] = new int[]{Calendar.YEAR,Calendar.MONTH,Calendar.DATE,Calendar.HOUR_OF_DAY,Calendar.MINUTE,Calendar.SECOND,Calendar.DAY_OF_WEEK};
 		int timeValues[] = new int[7];
@@ -100,12 +101,21 @@ public class TimerManager extends Thread {
 	@Override
 	public void run() {
 		
+		now = Calendar.getInstance();
+		
 		while (true) {
 			try {
+				
+				long t = Calendar.getInstance().getTimeInMillis();
+				if(Math.abs(now.getTimeInMillis() - t) > 10000){
+					now = Calendar.getInstance();
+				}
 				
 				executeTimeing();
 				
 				executeCountDown();
+				
+				now.set(Calendar.SECOND, now.get(Calendar.SECOND) + 1);
 				
 				Thread.sleep(1000L);
 			} catch (Exception e) {
