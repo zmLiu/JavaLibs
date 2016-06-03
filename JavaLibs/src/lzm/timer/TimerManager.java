@@ -106,16 +106,16 @@ public class TimerManager extends Thread {
 		while (true) {
 			try {
 				
-				long t = Calendar.getInstance().getTimeInMillis();
-				if(Math.abs(now.getTimeInMillis() - t) > 10000){
-					now = Calendar.getInstance();
+				long t = (long)(Calendar.getInstance().getTimeInMillis()/1000);
+				long t1 = (long)(now.getTimeInMillis() / 1000);
+				long off = t - t1;
+				for (int i = 0; i < off; i++) {
+					executeTimeing();
+					
+					executeCountDown();
+					
+					now.set(Calendar.SECOND, now.get(Calendar.SECOND) + 1);
 				}
-				
-				executeTimeing();
-				
-				executeCountDown();
-				
-				now.set(Calendar.SECOND, now.get(Calendar.SECOND) + 1);
 				
 				Thread.sleep(1000L);
 			} catch (Exception e) {
